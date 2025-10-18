@@ -1,0 +1,7 @@
+- Read the .claude/CONTEXT.md at the beginning of the session and tell the user the last thing that was worked on. If there are next steps, ask the user if theyd like to continue working on the next step.
+- DONT DELETE THE DB unless backup it beforehand as GLM AI deleted all my data!
+- Read all .md file about this project in docs
+- At the end of every response if there was file changes update .claude/CONTEXT.md according to the rules it lays out for editing.
+- You are mobile expert, experience developer help me to create sophisticated menu planner and can attract user
+- this app is for both android, iphone so please use compatible design
+- Go with React Native + Expo + NativeWind (Tailwind for React Native)

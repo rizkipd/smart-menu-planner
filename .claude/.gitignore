@@ -1,0 +1,6 @@
+# Claude settings
+settings.local.json
+
+# Session data
+*.session
+*.cache
