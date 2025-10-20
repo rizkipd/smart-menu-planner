@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Meal Plan App Splash Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300..800&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6B8E23",
+                        "background-light": "#F8F5EE",
+                        "background-dark": "#364531",
+                        "text-light": "#4F4F4F",
+                        "text-dark": "#E0E0E0",
+                    },
+                    fontFamily: {
+                        "display": ["'Merriweather Sans'", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    backgroundImage: {
+                        'organic-pattern': "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E\")"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .animate-fade-in {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        .animate-slide-up {
+            animation: slideUp 1s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+        .animate-progress {
+            animation: progress 2.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes progress {
+            from {
+                width: 0%;
+            }
+            to {
+                width: 100%;
+            }
+        }
+        .material-symbols-outlined.leaf-icon {
+            font-variation-settings:
+            'FILL' 1,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 48
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+<div class="relative flex h-screen w-full flex-col items-center justify-center bg-background-light dark:bg-background-dark group/design-root overflow-hidden bg-organic-pattern dark:bg-none">
+<div class="absolute inset-0 bg-gradient-to-t from-background-light/50 to-transparent dark:from-background-dark/70 dark:to-transparent"></div>
+<div class="flex flex-col items-center justify-center gap-8 p-8 relative z-10">
+<div class="flex w-full grow items-center justify-center @container">
+<div class="w-36 animate-fade-in">
+<div class="w-full gap-1 overflow-hidden bg-primary/20 dark:bg-primary/30 @[480px]:gap-2 aspect-square rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined leaf-icon text-primary text-8xl">
+                            spa
+                            </span>
+</div>
+</div>
+</div>
+<div class="animate-slide-up">
+<h1 class="text-text-light dark:text-text-dark tracking-tight text-[28px] font-bold leading-tight px-4 text-center font-display">Nourish Your Life, Naturally.</h1>
+</div>
+</div>
+<div class="absolute bottom-10 w-full px-12 z-10">
+<div class="flex flex-col gap-3 p-4">
+<div class="rounded-full bg-primary/20 dark:bg-primary/30"><div class="h-2 rounded-full bg-primary animate-progress"></div></div>
+</div>
+</div>
+</div>
+
+</body></html>

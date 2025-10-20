@@ -5,3 +5,4 @@
 - You are mobile expert, experience developer help me to create sophisticated menu planner and can attract user
 - this app is for both android, iphone so please use compatible design
 - Go with React Native + Expo + NativeWind (Tailwind for React Native)
+- USE [docs/smart menu/] template !!!

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#111714",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden p-4">
+<div class="flex-grow flex flex-col justify-center items-center">
+<div class="w-full max-w-md mx-auto">
+<div class="flex justify-center mb-8">
+<svg fill="none" height="48" viewbox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 9.33331C29.8822 9.33331 34.6667 14.1178 34.6667 20C34.6667 23.3555 33.1555 26.3333 30.8889 28.2222L30.6667 28.4444V34.6666H17.3333V28.4444L17.1111 28.2222C14.8445 26.3333 13.3333 23.3555 13.3333 20C13.3333 14.1178 18.1178 9.33331 24 9.33331ZM24 4C15.3556 4 8.66667 11.0889 8.66667 20C8.66667 25.1555 11.2 29.6 15.1111 32.2222V38.6666C15.1111 40.8666 16.5778 42.6666 18.4444 42.6666H29.5556C31.4222 42.6666 32.8889 40.8666 32.8889 38.6666V32.2222C36.8 29.6 39.3333 25.1555 39.3333 20C39.3333 11.0889 32.6444 4 24 4Z" fill="#38e07b"></path>
+</svg>
+</div>
+<h1 class="text-white tracking-light text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">Welcome Back</h1>
+<p class="text-gray-400 text-base font-normal leading-normal pb-6 px-4 text-center">Log in to continue to your meal plan.</p>
+<div class="flex flex-col gap-4 px-4 py-3">
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-white text-base font-medium leading-normal pb-2">Email</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-2 focus:ring-primary border-none bg-[#29382f] focus:border-none h-14 placeholder:text-[#9eb7a8] p-4 text-base font-normal leading-normal" placeholder="Enter your email" type="email" value=""/>
+</label>
+<label class="flex flex-col min-w-40 flex-1">
+<p class="text-white text-base font-medium leading-normal pb-2">Password</p>
+<div class="flex w-full flex-1 items-stretch rounded-xl bg-[#29382f] focus-within:ring-2 focus-within:ring-primary">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-l-xl text-white focus:outline-0 focus:ring-0 border-none bg-transparent focus:border-none h-14 placeholder:text-[#9eb7a8] p-4 pr-2 text-base font-normal leading-normal" placeholder="Enter your password" type="password" value=""/>
+<button aria-label="Toggle password visibility" class="text-[#9eb7a8] flex border-none bg-transparent items-center justify-center pr-4 rounded-r-xl">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</label>
+</div>
+<p class="text-[#9eb7a8] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-right underline cursor-pointer">Forgot Password?</p>
+<div class="flex px-4 py-3 justify-center mt-4">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 flex-1 bg-primary text-[#111714] text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Log In</span>
+</button>
+</div>
+<div class="flex items-center px-4 my-6">
+<hr class="flex-grow border-t border-gray-700"/>
+<span class="px-4 text-gray-500 text-sm">OR</span>
+<hr class="flex-grow border-t border-gray-700"/>
+</div>
+<div class="flex flex-col gap-4 px-4 py-3">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 flex-1 bg-[#29382f] text-white text-base font-medium leading-normal tracking-[0.015em]">
+<img class="w-6 h-6 mr-3" data-alt="Google logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXDL1f1i2EbgmjiFWJDvwHutqy3ng9pr6l-ud0OWL7iNPZX5c5Pn_bG-TxobjJbuztJzkC3JJADbqBslYO-2_Y_GkWqa26DsETZDsyJjFDOaXllYfyjIjiHFRbsayvLU_giPN7I9kYCRZCIWwq-sJi-_mkCeYlQ38Qh2kUAHm36FrhoEoO1VBsfDLMA2dlf3LEDqdlY99kXw1fXqC1YbDW94AvQx9XkTFx-SusMdrlsz4yh8kffk_jW16Ur4uo-ohBHy_FBq2EUF3m"/>
+<span class="truncate">Continue with Google</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 flex-1 bg-[#29382f] text-white text-base font-medium leading-normal tracking-[0.015em]">
+<svg aria-hidden="true" class="w-6 h-6 mr-3" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.213 14.354c-1.288 1.485-2.923 2.485-4.213 2.485-1.29 0-2.925-1-4.213-2.485C4.213 12.87 3 10.87 3 8.64c0-2.23 1.213-4.23 2.788-5.714C7.075 1.44 8.71 0 10 0c1.29 0 2.925 1 4.213 2.485C15.788 3.97 17 5.97 17 8.195c0 .32-.016.634-.044.945h-2.19c.029-.306.044-.616.044-.93 0-1.635-.85-3.08-2.025-4.04C11.975 3.37 10.985 3 10 3c-.985 0-1.975.37-2.788 1.175C6.36 4.965 5.166 6.41 5.166 8.045c0 1.635.85 3.08 2.025 4.04.813.805 1.803 1.175 2.788 1.175.985 0 1.975-.37 2.788-1.175a3.504 3.504 0 0 0 1.096-1.57h2.247c-.365 1.58-1.5 3.045-2.8 4.04zm7.98-6.17a4.632 4.632 0 0 0-3.155-1.48c-1.745 0-3.32.96-4.135 2.48h2.24c.48-.84 1.47-1.4 2.56-1.4.955 0 1.81.42 2.375 1.095a2.91 2.91 0 0 1 .37 3.42 2.91 2.91 0 0 1-2.376 1.405c-.955 0-1.81-.42-2.376-1.095H14.9c.77 1.44 2.21 2.485 4.1 2.485 2.485 0 4.213-2 4.213-4.48 0-1.81-.92-3.3-2.13-4.065z"></path>
+</svg>
+<span class="truncate">Continue with Apple</span>
+</button>
+</div>
+</div>
+</div>
+<div class="text-center text-sm py-4">
+<p class="text-[#9eb7a8]">Don't have an account? <a class="font-bold text-primary underline" href="#">Sign Up</a></p>
+</div>
+</div>
+</body></html>

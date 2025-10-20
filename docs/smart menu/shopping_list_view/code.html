@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Visual Shopping Guide</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#111714",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        :root {
+            --checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(17,23,20)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');
+        }
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="flex size-12 shrink-0 items-center">
+<span class="material-symbols-outlined text-gray-800 dark:text-white" style="font-size: 24px;">arrow_back</span>
+</div>
+<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Visual Shopping Guide</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-gray-800 dark:text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined" style="font-size: 24px;">share</span>
+</button>
+</div>
+</div>
+<div class="px-4 py-3">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+<div class="text-[#9eb7a8] flex border-none bg-gray-100 dark:bg-[#29382f] items-center justify-center pl-4 rounded-l-xl border-r-0">
+<span class="material-symbols-outlined" style="font-size: 24px;">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-gray-800 dark:text-white focus:outline-0 focus:ring-0 border-none bg-gray-100 dark:bg-[#29382f] focus:border-none h-full placeholder:text-gray-400 dark:placeholder:text-[#9eb7a8] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search for an item" value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-col gap-3 p-4">
+<div class="flex gap-6 justify-between">
+<p class="text-gray-800 dark:text-white text-base font-medium leading-normal">6/20 items purchased</p>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal">30%</p>
+</div>
+<div class="rounded bg-gray-200 dark:bg-[#3d5245]">
+<div class="h-2 rounded bg-primary" style="width: 30%;"></div>
+</div>
+</div>
+<div class="flex flex-col p-4">
+<details class="flex flex-col border-t border-t-gray-200 dark:border-t-[#3d5245] py-2 group" open="">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<div class="relative w-full h-32 rounded-lg overflow-hidden mb-4">
+<img alt="Produce Category" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOcANmYJKnxtTwVs3v2eVfFqS2rcU7y_7F34dWsVVEOEznuNvkgfWEyB-piSS1VhfKu8YUOg5_g-EotwQNCMiyP5mP8xn4jCXhbrKELDfiaCYNIbZ76mt5r5A6HZKgNlhGfdlKx-XtOwAr1LOpPJHbjPIvb7P9cfrY6PtbK0LUK6szAvO6vx7rws8TxzbEVGVGY2wZkRG-ruRoYTTvmhbAj1GrQ01Tx9_IHBSZk3YNox-odIViO2KSQtaKFbEAIUSLTTeujvk-EUrL"/>
+<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+<p class="text-white text-xl font-bold leading-normal">Produce (5)</p>
+</div>
+</div>
+<div class="text-gray-800 dark:text-white group-open:rotate-180 absolute right-4 top-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined" style="font-size: 20px;">expand_more</span>
+</div>
+</summary>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-0 pt-2">
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Avocado" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB36hVghfRUe8XuNInYG2WEy-LEVWYYBSlWTIxfgSe-4kxm6s3O8l2E4K5GTEX9y9dJWsgn_wqAgUsiq0EBnFh5cMmUcHo0ms05AcmCm1ZYtvjCwQot_9oxvNA9tovtoS9PApBNvZnOXOBI4xjif8uY003XPMOeqBuv3BeJrmxq4GLaSwkGkhNbiqHh7BBcPtPuy5m2u5TO9ZpIPBt-8kr1JERJqvSPaukxaMkekguzB5cEF4idbNr-6BQidpvUOjbsUIEEduAvFhg3"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Avocado - 2</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Bell Peppers" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9igqpGi2SUge-NjG-8DyNgXQneUXJyJ1Okrc2MAqTBqYgu01fKvLevALGSdzKVxxAmNxyjG451cNRY8HZJzeRi9GdeDIAPZMXadtOf9nINLtoVyew2e285glEGrrd_42qBF3Ccus5_jee7HJ2gtEfoim7BUnBf5XhyDn5UYP1kx-cVrUGKTUQtXGzLT9c4ga9xpKxY7R8_6hMIl4HeJ4hgrMf6m0IODxk975GEgmuirvTsZaenulnwIq3aJObuhysd-TxFVmMGzc-"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Bell Peppers - 3</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Spinach" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTot7g1GHPdpU3b3myBwFEZdgTSujZTVtjfBJazeY4xzPpbvTS9tLA4zNxk8rJ31lXdcZqsRlXkB289XpMNW3cj_jNBDJFNkBnJovQrecXWURcfZVgn-SZAewGMwZubA5b7t08jyzuzmLDVqzuCz42bEMmAtHq_3ciHnEDkGL8xM43CZvo6gOTOj9GPlxd44HeM99UK_2oazM0YpHCG1o2JY2TkBi_xcN8ItF5NmFC85uBHT5y4kpbE38I3DqiSPN7Ze5zlMsYSf__"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Spinach - 1 bag</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Tomatoes" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFUFsm5FXvjpx6VEZvQOD9bKKNQ3PDbcw3xMaAUNqi69_KK0zv9RFMWSDgrS8m5d8e4zB5OQd0cL1wqb1fs4MEuSCZ3AzyzZsjLz4bRRQVH6wOaNr1jlLRb0LkJc0rDCirVFISCEdHFDkTkeLS7JbxJqVEcCaC8i_wNy3Vo4r0YxhlOqDF65OukXePTIYg17g1VPJKURscMDKdyWGQ1egTBTDFXSLgkXqwLz5JdJJ35LQX7fB2lfRg8_fiBtJuBO7f0CZmKqssyGeM"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Tomatoes - 5</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Onions" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0__-scAJoHM_i1ZczuC0BbCoikQVyvANdTRczZ8t4pPVrn2DhMcVOuQndarKHeRxzFewzd_eratsNypCCYtMvOY8rjkFoLQrhVxovg5TtOxdldMycSj-nM-1G6eCestxW8npsNtfmfKr8jkf2DD8HJ3hmaVqcRYn9yHYkXIA8unZK5DVOlZZOzCPPPSilaYIKFfyVbgj7l341rnE0OKrEoPrpDJy6WynLcua8NXtVYOYO8i5_FS22CLXVGP7y8ED51X-tkS2618Um"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Onions - 2</p>
+</label>
+</div>
+</div>
+</details>
+<details class="flex flex-col border-t border-t-gray-200 dark:border-t-[#3d5245] py-2 group">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<div class="relative w-full h-32 rounded-lg overflow-hidden mb-4">
+<img alt="Dairy &amp; Eggs Category" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1hl8XNO1my03CJqBi8WAExKMdDKdINzqjwmQexRck-UCXwwwUjHFLtaIun7iG0zFMq17zxaiXYSPgD9QdGDdAPX-EQImQNIyoqaBR-bzODzFNDN1jj7wdiBw4Avi5-z5juvw-PiNhZq2A5sZARtalgP1ioj9eH50jvuoQT76t1FrODRtFy4UXWiQVMiWXNbJCsxNwAIcclCfcCFO3OasB-AaCfFSs9uy9FSFC0Cx1Vh3BM-6eP0sw9KOEDV2at238qCgglKko-TaM"/>
+<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+<p class="text-white text-xl font-bold leading-normal">Dairy &amp; Eggs (3)</p>
+</div>
+</div>
+<div class="text-gray-800 dark:text-white group-open:rotate-180 absolute right-4 top-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined" style="font-size: 20px;">expand_more</span>
+</div>
+</summary>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-0 pt-2">
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Milk" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRReTItIhwYVXvsh-JN9fH62OT_BDHjTTXEN4uDgKcvQTju8fo58mKFbj7vHYQOgi2K0fmKwpwI1bHI-pAXkv-oA4e3l43NAqT6On1yFD0LmuirWja6DQy8wbKyTQZ98dUd2g_A5uh5Hp2pc9JrbYeF_F9nvuHKp6ISkmBRQ0E5J9gXog24UltdN_f6MsUc331IhgX_DHW7bsIWMDXjVqgV9MI_uw1bZOKK8QpKslEVi0hXwnEcHM3Z4ksu3xf6upu8mbNUncUEzRH"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Milk - 1 gallon</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Eggs" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3Y6ugkCtQZGEErRD-bccUBECelKvVym-7BbeZCl03tODQMF7sJ0RWy9fRanJz1Ec8RRvdhLwH74Mz-eqzdRIcVCMkO5MtvviNEBqxZU5owWEG4B6tRfAfHF4AlJUpapEmE0ij_jbZf-aVl46qA6XrFrayWqYc_0Gfa9ODG2qKmAzRlPib9WgDc0VWRGhINZAukwYSFvkVaKsrg6n3qilAWFmXtuZAq77fXQo2NOEBFvFkemyeeiCmWHgllWmRwialY8-zH_Q1J6DP"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Eggs - 1 dozen</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Yogurt" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDj669boyQkRUDAYgDSupO40KGfXp57iEV-HTTP38UAmUiXvNep2gzkpATdQJpqFjlG7jGuUcYgQ9afmrNGkG3GJMNWUGFoY1V7MV3ti8KatUcVp3KFsavD8_GxVWxpIUH_fgZuQRsG0HtCqMs4fwlpa06HcPL6tcS2oUi7vYY-0aLfHy3nN6DonvFpcgZJTljcpkZ5pI41W_U_dPrIGywKXFQjQUaGhpuVIz9j9UeZ6HOva2d67s-6IFOZqAkOcPJwK4uNZ6FxyNcH"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Yogurt - 1 large</p>
+</label>
+</div>
+</div>
+</details>
+<details class="flex flex-col border-t border-t-gray-200 dark:border-t-[#3d5245] py-2 group">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<div class="relative w-full h-32 rounded-lg overflow-hidden mb-4">
+<img alt="Meat &amp; Fish Category" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAV3Tx42OuZFk-k3npw9aHwod2Qw_ccyEX0c9KTppczMtE1vYsVQHhUcqaE3qLT8dB5cMt27aSOM_xgy58DXk0L7CsRkE-aPQNL20bl8iwj7u5Fa8SPmjKrK0Vo5jw0N_G-0J5KnMgGB6UwasdbpE5gveh-n2_ZI43E9UhH23mwmBiDuz933SR0Vb_nPJRdahAuwR9i1oPCE-WqKi4_kXV_foC8UztTSGd8sd0cImPPICUyFBkPafnnMwM3m5zoQKo3Ny_MGkEEOFhg"/>
+<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+<p class="text-white text-xl font-bold leading-normal">Meat &amp; Fish (4)</p>
+</div>
+</div>
+<div class="text-gray-800 dark:text-white group-open:rotate-180 absolute right-4 top-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined" style="font-size: 20px;">expand_more</span>
+</div>
+</summary>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-0 pt-2">
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Chicken Breast" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApAlB5RpGz8jvf6N7rvmtBtJqExwVz8rQ2TPt5WfoJl8fFl6tqtay9r5IN0p73bpd0GFJ-FP3RrWKCvm1BhI2xqY-pd6vTtF9TLKUcnFPe1EbmVs4UGBroyfzA3RcFlvUDUNeoUGi6rU0SYMw4yWfINvVl5wJV-VIeA4yn8DhQclh3z_yIYaLEz55G7HETHFkrcgfbbMJvYRbS0zMFPSz3r8HXJpqXvmAdE1wJDNH12NUp4dVzDfLESOjoUjarig_-ZXbGolRYsuZG"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Chicken Breast - 2 lbs</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Salmon" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtoFWfoB4lQsm9f_0595CqBI2ByV9xnCvw03CY55R7O8l8mM3EopmU1Nox1ft03g-skCszHWy9ifCObHyRsNXgRQWIKApAQLptImxsIzev5EE0nDJ6Pcd1Ej6T9Fdb1i9pCn0eUlKxl3EdU4AN_oNq7s4prDd7YmoSbtoNiqVv-EmKdTyuUTFtWl0elXEYG_8BZtOuIayCloWr4uQxotOwZPKf0zvaLh9hM48JyFlw85L5SuFxmKGAT0zVpljzxHd5sUY1BT7EB-0W"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Salmon - 1 lb</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Ground Beef" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLiQaqcLfAPCOW3MdnDcQaDPFjWTRKeGe86dui583TQ4c3Zd0IxBq28bLYEO_MApvyMYWqcu2NUJRmKMI2VxaDrl8cS7Hnp9x8YhXzA3c3e1beBgDKkz1gJO4A9Meb6f8fwoEm4kAFGmfUPrqNboEhl4cOU-AvRF9WWJX34_JA0PovmOPmmQ-q3OJzGqK4yDjjLDev3Za0Hl7cO7KCMxh2hhACA1YNAKCRa86GByfubU7iCy-EtVUMNxPHYBbzwYxd5HzvPT1O9aHm"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Ground Beef - 1 lb</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Shrimp" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYfqNWsrYbxAjP3Zhl39vHaxnkhRsuzKxemDGxWKKwv08kw_IA5jQRqtoy0QkDqkahZ-qFpC1lvY-LrLO1reB18v2AIIlIsJ7jhizpcDDuTXggg1rEqbdJK0r-wQJK1cPjCHGfBu_ss5BxEW6ZiAv-oWsqUgAABWfNSvb9ePaA8htBYJElT8EnafBlbdhVfjQ67bKv875GBOsNDqUg7fcQOO6gyDuCjLdFswxoEChogperfwpMQKW_bckHTquh3xHXpoM_AwASu3se"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Shrimp - 1 lb</p>
+</label>
+</div>
+</div>
+</details>
+<details class="flex flex-col border-t border-t-gray-200 dark:border-t-[#3d5245] py-2 group">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<div class="relative w-full h-32 rounded-lg overflow-hidden mb-4">
+<img alt="Pantry Category" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3x1RyiS4eJ-Y7FCAF1NnhZ-ya2ciJOXJ4ejxASsN__bUaHT2r_-jQhxLawh-ZFX5kdxH98j0sgue9p74y6HMrQ8Q2u_QoV0thaxDTX2lX1vVDodwsTyk2xXz5I6qaIYmxxv_tZmLbSp1D3XxsOYyW6uPrd7fYJPtZ9MuF5cPJg-OOzxv5pBmrxmZzRQAna_EVAgIPkbdrDHhd-uZk8IrU-L_tuTuVnDmzcX-Xv1mPN2pC-OuaVJ_74Bqy5gcTfKYDYfZeZUnjnnpL"/>
+<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+<p class="text-white text-xl font-bold leading-normal">Pantry (8)</p>
+</div>
+</div>
+<div class="text-gray-800 dark:text-white group-open:rotate-180 absolute right-4 top-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined" style="font-size: 20px;">expand_more</span>
+</div>
+</summary>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-0 pt-2">
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Rice" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHBwuyUSMxDflK3eOSwsbPz80ZfEyreEQ5mxMTdZYdBqLpj9pgD5Iznd9dcCG8TCKdIEVUcTCAtSVEtxpZ1RVLjd7pIaCSjNVTz4uMTamX7UGlQEBaNccVXr6cFeKvYdV8CD87BcjdL5-ucLMXnKjlFhKMruUCsqkXWpjtpBggzINsBTh4Wl8fDTGsAO93XES-zwKJ6RBac1tmWukW3Zsg8YWOYNmVO6S-H1owEQgnv1nbh19p5fj7-xOUZvvY8uODiKIJpGbm7tMx"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Rice - 1 bag</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Pasta" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHMVq4BToNbMUX_OOI7gWtHmrPVCFEnJ5py2RlrbeXkD5zGTB2ApslUzbh8SPPY1I8ErBvqgr4eMxJf_6VT6p6qx4M-gcScUmgGd-rBp9wmR3T5CXRvmlzK9f5e58evU7XZLwvJAqgoECMNa45kwt_HPUvokmDlOykJYERpUNeSD7lJ5Sm5cAPM4reobp6dfzmWhnKB8pEHjECTA2CwynT6qo3KVM0jazHEliSZY_J7zUd0OWWQHXRBLTqgmf1pyMeecEjSjdvFc2U"/>
+<label class="flex gap-x-2 items-center w-full">
+<input class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-800 dark:text-white text-sm font-normal leading-normal flex-1">Pasta - 1 box</p>
+</label>
+</div>
+</div>
+</details>
+<details class="flex flex-col border-t border-t-gray-200 dark:border-t-[#3d5245] py-2 group mt-8">
+<summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+<div class="relative w-full h-32 rounded-lg overflow-hidden mb-4">
+<img alt="Completed Category" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPTBBABLve4l_00ZHqnggizVVUs_2W5DpIHKDu50fQDvhboah-fHOxweAUvj2YaK6Lj6Jgv0Q_-Q9THyQh4VzWRaw1elwXHOttHCgna5tfQTdGXaFi9-Aj7MJGtJ-4nuILWPepii7-vtusDkVn95tpUokszdDMw7LGS_5VtRgNAX95rdFcWm_XBATNN3mb-wuPPZhLUO171ENxHNgS6cVTftoG8FZDXLwM1UAU0ww6sA8vtIIup_a4GedlSe_hjTHHgGldbz3bUq9q"/>
+<div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+<p class="text-white text-xl font-bold leading-normal">Completed (6)</p>
+</div>
+</div>
+<div class="text-gray-800 dark:text-white group-open:rotate-180 absolute right-4 top-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined" style="font-size: 20px;">expand_more</span>
+</div>
+</summary>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 px-0 pt-2">
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Bell Peppers" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZJEYojcesSYTKgPbpX8kHBlNQuvOeaQkyQrnfJfam4LItN60pgUa6u5xTNvDhb_4LtOFpfetz8yjUlt_OuUoZAf_HxglCTGxhlW3_GWTAKSwb1jwJVkh3sT7CLYMLSWLa8VRZJgMbsFGWpDPZJjxIvuWt18pIpIbhwJtaGCBI9efAD_uue6Aoq6Ha_eBQO8fc0MNkdDlxVo88Xp2J98FxLEChbKpG6UZQrOiVR0XJA1cbJZTINc12janzHYscwZcSkpNWS1aVGlm_"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Bell Peppers - 3</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Onions" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByysii5F7kgFUCQjG7wxUXQoQ3Iq-lzIYJ-zobucschFkPh_U00DgGRz4OjzB03zyua9aiMcgj4VB_OhMRuGV7gBV6XEZwYG_sgq3qZCGMkl3nTwVy5TeyeM3wNrvw8RmUHn_cgsOROXE_Z8TnGNyI-vkEFJPc4nLKpF0q0XOBjAK8-Yl25qn7h0EsXXIkrA8o3BHhR9SjwMIsxanHMswpQdS9SML9ln-kGmbV49usGSQa2e1stnTkVeG_zPtjecxhncP0yupVX3Bh"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Onions - 2</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Milk" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL3GpEB2IkksVAP_LU3Ajuu9y62EU5GqKz8nG-g3StR-faY5OHSGyb1S_g1b2BbZrLzQ2pfEURxC58VuUWlaRnBkFnmzWHPq8GPRjD3I6JEKdyvboVvybrVmJS8kZAAW_A-B-dIZ9neLKE7SQEY2UuGUn1bUwJz14aNvUhIYLcyB3PCz7d5edYcfILR-TdNEbxY0FrYDz7jCQCmgU1szqlEyIPV3o_3rEYYMb_NtxtU9RS8uCmkf42VSrHckXzkZlEvE-9zgSEoa1h"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Milk - 1 gallon</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Eggs" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRD1MHEhsb4m2I1n2-SED-oCYL2j38amRQQIyBWWzfGuKxhIMyxASu8TxUudFTF-0rm-KL_jPrJilRDUO6dRaNVEdsQgoRoLFCJoyJoxpku2RYUZ28U3gZ9p-y8svEcSFXoO6AYGCrMFASCGYTs6B9H2klL_1pUl7kjNV5u3zpB6s7Yzu-vO7bfbhOQxV-JkLxMnMtWWuTRzHIkiUPvoTwuIK-tQzrpbAaF_d_JtG8Xt3VyZhmho3RL-mjCNOqsrbGZJxN6FqlMv_4"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Eggs - 1 dozen</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Chicken Breast" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDssBOdJPQsSqlVfpxskXTN8Fj24pyKM5Hlb2qtQE-VN5chz8ETgGHzlkVrFvUvaA1UwV58WAMGTf9Q2lkBLv5H2Zt8ph0LecAgGbBK6ZasX1J_bL2MgHNBtsR1CUmTIQw514twjtkKSNwpq0yVFEx1hVuEUJcf2WA1ZzGhaXYVVX7rnZtblpSDy_X-WU_pFvEZumhwsIdHSY3ie-oPOBYQPWqx7vXtm5iQLhYaPKSJ_BIhGwWaHjUTzHzpYHfkjqpVyksYEkmSeZXs"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Chicken Breast - 2 lbs</p>
+</label>
+</div>
+<div class="flex flex-col items-center p-2 rounded-lg border border-gray-200 dark:border-[#3d5245] bg-white dark:bg-[#29382f] cursor-pointer">
+<img alt="Salmon" class="w-24 h-24 object-cover rounded-md mb-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQurWFKbHOGaUvIAQCd3mO3-Ajt9yFgYmlMhLjeZ0ieykJeyRksrHvJe2nByWkmKTgRc8TlZsG9ZOh40-1PGKp1_eCyeOg_98g-pvtJ4n5-1FN4zxaREJBggaovNdHNPuYPJ_VQI9aVnq81d3_3JxRVZdTrKbmSLBKrg2uUW04Yb9jYKPmkUreOTzCOx_fNwZKIJAsSRg7-4ZHWaBoo9B8Yao2qbOica1x8x8VKvIZ5mhrYZM4OKmQyfBVKOzeg8xwHcBfLAQ_Rj8F"/>
+<label class="flex gap-x-2 items-center w-full">
+<input checked="" class="h-5 w-5 rounded border-gray-300 dark:border-[#3d5245] border-2 bg-transparent text-primary checked:bg-primary checked:border-primary checked:bg-[image:--checkbox-tick-svg] focus:ring-0 focus:ring-offset-0 focus:border-gray-400 dark:focus:border-[#3d5245] focus:outline-none shrink-0" type="checkbox"/>
+<p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal line-through flex-1">Salmon - 1 lb</p>
+</label>
+</div>
+</div>
+</details>
+</div>
+<div class="h-24"></div> 
+</div>
+<button class="fixed bottom-8 right-8 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg">
+<span class="material-symbols-outlined" style="font-size: 32px;">add</span>
+</button>
+
+</body></html>

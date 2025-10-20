@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Favorite Meal Plans</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#122017",
+                    },
+                    fontFamily: {
+                        "display": ["Epilogue", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<!-- Top App Bar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between">
+<div class="flex size-12 shrink-0 items-center">
+<span class="material-symbols-outlined text-black dark:text-white">arrow_back</span>
+</div>
+<h2 class="text-black dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">My Favorites</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-transparent text-black dark:text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined">sort</span>
+</button>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="px-4 py-3">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+<div class="text-[#9eb7a8] flex border-none bg-gray-200 dark:bg-[#29382f] items-center justify-center pl-4 rounded-l-xl border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-xl text-black dark:text-white focus:outline-0 focus:ring-0 border-none bg-gray-200 dark:bg-[#29382f] focus:border-none h-full placeholder:text-[#9eb7a8] px-4 pl-2 text-base font-normal leading-normal" placeholder="Search my favorites..." value=""/>
+</div>
+</label>
+</div>
+<!-- Chips -->
+<div class="flex gap-3 p-3 overflow-x-auto">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-primary/20 pl-4 pr-2">
+<p class="text-primary text-sm font-medium leading-normal">Vegan</p>
+<span class="material-symbols-outlined text-primary text-base">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-gray-200 dark:bg-[#29382f] pl-4 pr-2">
+<p class="text-black dark:text-white text-sm font-medium leading-normal">Low-Carb</p>
+<span class="material-symbols-outlined text-black dark:text-white text-base">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-gray-200 dark:bg-[#29382f] pl-4 pr-2">
+<p class="text-black dark:text-white text-sm font-medium leading-normal">High-Protein</p>
+<span class="material-symbols-outlined text-black dark:text-white text-base">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-gray-200 dark:bg-[#29382f] pl-4 pr-2">
+<p class="text-black dark:text-white text-sm font-medium leading-normal">Vegetarian</p>
+<span class="material-symbols-outlined text-black dark:text-white text-base">arrow_drop_down</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-gray-200 dark:bg-[#29382f] pl-4 pr-2">
+<p class="text-black dark:text-white text-sm font-medium leading-normal">Quick &amp; Easy</p>
+<span class="material-symbols-outlined text-black dark:text-white text-base">arrow_drop_down</span>
+</button>
+</div>
+<!-- Image Grid -->
+<div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-4 p-4 flex-1">
+<div class="flex flex-col gap-3 pb-3">
+<div class="relative w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="A vibrant salad in a white bowl" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDyvHVS8S9bb1DQohpzVUbz0oTuDxCvVlqoufKxpTMaaAXmaXkI2Ohk1hXDiEuLTY2duXmpLpMclBFOHLrFuqIFb7Sf-WxengQ-hqAPegj_wwTAvykRwKIaHRFVMHSbti4y8Y2Bd6JW2x6m16M17KEPYMofFivKBZcQoRmEOHN1pQvtsdK6s-bfNploJj18zHUuzVAU8kgjgX8rHUP-adKgIhlUxq4Z67iQSrMxH2B2phERNrrxFvY2P1uIxb0oip9F9zePQWcaePLK");'>
+<div class="absolute top-2 right-2 flex items-center justify-center size-8 bg-black/50 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<div>
+<p class="text-black dark:text-white text-base font-medium leading-normal">Weekly Keto Plan</p>
+<p class="text-gray-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">7-day low-carb meals</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3">
+<div class="relative w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="A hearty vegan burger with sweet potato fries" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAD3uZdDTIHAG2ssmt2UNzk1FisvouKxQvvZ09qhK4bdlv0D6LuwHGEW70dP-U7oJFJJ-A9Wkf6GsS935SsoOFfrdu6kP6jq1ufgYCIs2QjsHjiU62pQmaqbnaELkVSb2VJuh0KhiET_Lqhz5x-PyeakwVIyN1iz_EtWqaiucZejtr9ZF5gnVEtZJ7SbisNpfLr8ieWU4zp3v2rD5U8hq01P_odvOj5QIj4cG92kP9fKHkt2NS-qfgXctvE9kqWsI1Ana2Eyst_Z5CE");'>
+<div class="absolute top-2 right-2 flex items-center justify-center size-8 bg-black/50 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<div>
+<p class="text-black dark:text-white text-base font-medium leading-normal">Vegan Delight</p>
+<p class="text-gray-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Plant-based recipes</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3">
+<div class="relative w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="A pasta dish with tomatoes and basil" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAj_gYAdm-o0T40IkiLwJ-rI1nbOfU4s1O8BuE--F1HOyH2nmBNNzxXd1gF6dkPA7wIY7QWaPR7HjbhhaiFVsKopQ4oCe1Hk1c_d-fkj9zItZxCBX61BiTx9G3-lxQ1l5HuY5K3qWn-7pa9-xTfKpkmXgNHtogIzzGvza8hIC53gutghfrNlwOW7zHCbyO11wzYxvOlaeLMxiNhK9m1-M_yo9BB0xzXJeqplD82vLB-qLS_G47DCdhqVl2N4e2tHGWyT6mZqPx6AxA7");'>
+<div class="absolute top-2 right-2 flex items-center justify-center size-8 bg-black/50 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<div>
+<p class="text-black dark:text-white text-base font-medium leading-normal">Family Favorites</p>
+<p class="text-gray-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Kid-friendly dinners</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pb-3">
+<div class="relative w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="A grilled chicken breast with roasted vegetables" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBQQs9iMQLADE42d-z8HymtURECGRXj5rds7n-dNwQGqL9z28FZl_jY6O56wKY7outLSbVOKu0SyDVv-pdOyeEx8BQZJfPkL-9XMIa7TIEeJLGrOjMVQQqit5qWgO_vyWQFp-BChYwrv_MASGI2PeVo_xeEwBkljFwB03TiXw1nLX9fXKvxNiiEFLhDeTe8tlu4sqRh34DQFolSPvOo2xp8gT-cgBqZx-2rT4O5V9OxdFpSw3_TlOBA1Srnx7BGYI6hiVh2-TTxOtBE");'>
+<div class="absolute top-2 right-2 flex items-center justify-center size-8 bg-black/50 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<div>
+<p class="text-black dark:text-white text-base font-medium leading-normal">High-Protein Week</p>
+<p class="text-gray-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Energizing meal plan</p>
+</div>
+</div>
+</div>
+<!-- Empty State (Uncomment to use) -->
+<!--
+        <div class="flex flex-1 flex-col items-center justify-center text-center p-8">
+            <span class="material-symbols-outlined text-6xl text-gray-400 dark:text-gray-600">heart_broken</span>
+            <h3 class="text-xl font-bold mt-4 text-black dark:text-white">No favorites yet.</h3>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Explore meal plans and tap the heart icon to save them here!</p>
+        </div>
+        -->
+<!-- Bottom Nav Bar -->
+<div class="sticky bottom-0 flex gap-2 border-t border-gray-200 dark:border-[#29382f] bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm px-4 pb-3 pt-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-500 dark:text-[#9eb7a8]" href="#">
+<span class="material-symbols-outlined">home</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-500 dark:text-[#9eb7a8]" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Meal Plans</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Favorites</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-gray-500 dark:text-[#9eb7a8]" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Profile</p>
+</a>
+</div>
+</div>
+</body></html>

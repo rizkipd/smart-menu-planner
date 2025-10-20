@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Meal Plan Goal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#38e07b",
+            "background-light": "#f6f8f7",
+            "background-dark": "#122017",
+          },
+          fontFamily: {
+            "display": ["Manrope", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex items-center p-4 pb-2 justify-between bg-background-light dark:bg-background-dark">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full text-zinc-900 dark:text-white">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-zinc-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Curated Gallery</h2>
+<div class="size-10"></div>
+</div>
+<div class="flex-1 p-4 space-y-4">
+<div class="relative w-full h-48 rounded-xl overflow-hidden cursor-pointer group/card transition-all ring-4 ring-transparent focus-within:ring-primary/50 hover:ring-primary/50">
+<img alt="Vibrant salad for Diet &amp; Health" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaOg5RziT9w_V4wlcMr4oPfvPHMuL8cU56wKFRgxcf1yJ-Esrl-uPyYS5-xNGjRVRFu_7jX7-4XKW-nCq1w1RXHP_rHvGpLLkwDQjvlEs9pMoExv7lnZsIqzzcfQi2Vf1tbqiI8IEjWDquDDj-tfL-1DobzabQZxN9rd2d-LeIeoxD4oBBmo4mcIw2XITqmcZVZmbrKkrI1sB0X5S8eXnX2QxrSLCUMw1lBD97un-TNbjb2INh2KvKdnBjSllyfgug8m-n3vnuL-ez"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
+<h2 class="text-white text-xl font-bold leading-tight">Diet &amp; Health</h2>
+<p class="text-zinc-200 text-sm font-normal leading-normal mt-1">Prioritizes nutritional goals and healthy eating.</p>
+<button class="mt-3 px-4 py-2 bg-white text-zinc-900 rounded-full text-sm font-semibold self-start opacity-0 group-hover/card:opacity-100 transition-opacity">Select</button>
+</div>
+</div>
+<div class="relative w-full h-48 rounded-xl overflow-hidden cursor-pointer group/card transition-all ring-4 ring-transparent focus-within:ring-primary/50 hover:ring-primary/50">
+<img alt="Gourmet dish for Taste &amp; Satisfaction" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAx5xPNlkSbWWu9d3v5wFEMqISovKmaqqqkpko4IDVzuS2egkbOBFbeGRGNEpyZ6aEa3NlKbjdWA7m_vuNTSc4w9VudTjGn8zpPMmouqhj4Bfe5DoeefW9hx5Ru44fXIBxgWx_v3qRdY2fi16b4JUeq4U5ddUT9osmx5h6oU0Zn5BShq_9tHX12aoLOSlcaokCnlKu_2ZhYx7jKYN7PYTTTXKBZvapGuVpP7bjwhGtDdmuKUPvF10QM-72X5-MenmIUtxx1JOKjdlK"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
+<h2 class="text-white text-xl font-bold leading-tight">Taste &amp; Satisfaction</h2>
+<p class="text-zinc-200 text-sm font-normal leading-normal mt-1">Focuses on flavorful and enjoyable meal experiences.</p>
+<button class="mt-3 px-4 py-2 bg-white text-zinc-900 rounded-full text-sm font-semibold self-start opacity-0 group-hover/card:opacity-100 transition-opacity">Select</button>
+</div>
+</div>
+<div class="relative w-full h-48 rounded-xl overflow-hidden cursor-pointer group/card transition-all ring-4 ring-primary/50">
+<img alt="Simple, wholesome ingredients for Budget Friendly" class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaukLgPSWZq6ULELdDIPVI6EDxJzcIM758cRS6E-ao5pKPsDhnHja2O3rlf5g4FUbmZJolB8_vSNjxh2aS_S0d_r7hrdbC1Rv5lIl39S4EOAleXA38QAjXuZgv42TAJkbgJB46N-S2g28gJLpR9MNZosGB52cUkj0ZjKcKz6aUic0RDiN6Z2WeR_R44F5iAocaSnbIxP7dddEvVQQAUgWBv9xYbBDXBzNBhFjxAxyWIcrIdIRzvSE8PeCTVsTrGSq1cnQTCz6fgVN7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex flex-col justify-end">
+<h2 class="text-white text-xl font-bold leading-tight">Budget Friendly</h2>
+<p class="text-zinc-200 text-sm font-normal leading-normal mt-1">Generates cost-effective meal plans to help you save.</p>
+<button class="mt-3 px-4 py-2 bg-primary text-zinc-900 rounded-full text-sm font-semibold self-start">Selected</button>
+</div>
+</div>
+</div>
+<div class="p-4 mt-auto">
+<button class="flex min-w-[84px] w-full max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-zinc-900 text-base font-bold leading-normal tracking-[0.015em] mx-auto">
+<span class="truncate">Continue</span>
+</button>
+</div>
+</div>
+
+</body></html>

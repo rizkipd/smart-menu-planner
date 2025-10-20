@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>7-Day Meal Plan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#111714",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<button class="text-white flex size-12 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-black dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Your Recipe Book</h2>
+<div class="w-12"></div>
+</div>
+<div class="flex justify-stretch px-4 py-3">
+<div class="flex flex-1 gap-3 flex-wrap justify-start">
+<button class="flex flex-1 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-zinc-200 dark:bg-[#29382f] text-black dark:text-white text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Browse Recipes</span>
+</button>
+<button class="flex flex-1 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Generate New</span>
+</button>
+</div>
+</div>
+<div class="px-4 pb-4">
+<h3 class="text-black dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] py-4">Monday</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Avocado Toast with Egg" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIyN4C4neKWgZwHxY0C9G63qCsKhPzaSDSIZqn1CCeOXYAZawiwyWu3GzWn6AxZ5yogHB5XxWj6QnxMResKqmdm0YKgzQRmhdPG4FSCxYWe3kP36qh4KHNLssccEF-O-hGB_9QwYdehXD-j3C-zrxZkBUeg-qkgxF5DE5IpyoF4rfvYrhz3ZI7C_LgR2N9AdaPKFuhufNzTN8r8A8WNgbJer9kORgz46d9IzjkD-duj3LjIkNR05xiM4tmoB8M6va79Gt1yLxIKuWx");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Avocado Toast with Egg</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Breakfast - A healthy and quick breakfast option.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Avocado, egg, whole-wheat bread, salt, pepper.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Quinoa Salad with Grilled Chicken" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDNmuvZco8ev-noSac-L6ZkDfTNgCpAn1qNSOJfb-wDPPkRpOjbj4BKqn9sbakCYo8ajG7ifNGvmWVlCo4ZvYPgldBkc3LVDID1A5IV7qSxSgdCLQTgm9coODWR2TeO_dcMlldHy73I9tgGuf2qmbeoz0deuzl1U0LAMz6mzk9rJaMC-CIrbMwQfNSv-49UJEpfPQnDju_1IUr2Z2pqF9F4oHtC4ubx1nmzuEqowC4eXVwD5_Xg6V58pXgM4u2vJiLm8H60uaqukLjG");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Quinoa Salad with Grilled Chicken</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Lunch - A light and protein-rich salad.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Quinoa, grilled chicken, cucumber, tomatoes, lemon vinaigrette.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Salmon with Roasted Vegetables" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB2eVGaWbte2gFS_pBWSR6fz5avyekicVb6K5brRzW4L0-uiK-3E5p3fQX2eHPfXTH55ZHquAuxjxa4jovhcXYVQuvmHth5Vt2XSSDWQatGJ0E_oTjyIrGtf7PhSntCrxR3j6U9ZprQNMj8iO4X8si1RVQCD2eDi0tCHQjLO26BnNy2BvhASZgGwHL5AIqYkRiO75o07b4UF8_vN27bKVDO6Zm3Chryo3i92g5ftIM4x9bZs34fZzIFkur75VHpvJz8ckkkWojeY_l3");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Salmon with Roasted Vegetables</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Dinner - A flavorful and balanced meal.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Salmon fillet, broccoli, bell peppers, olive oil, herbs.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+</div>
+<h3 class="text-black dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] py-4">Tuesday</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Greek Yogurt with Berries" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvHPEyHbXMYRPNfYCEHt8P_08oU6cxYE5jGXEH0YwzyFFHdBslrH1miyP5zZldoxPo6yYc7XRvOZBmP_SAOh7yXSUR77M5sWsDb0knV8m2oNZ-980AqkQVzxC5dZwL6OLw2xYPEQBC5_AEOw05Eb1VZv-TVnjqMogZTdU294DCdBim8rXp8GpLg6Td4rFy7eBMEK0tV1GN9U5jCTElezYFxJcOvxfTr9g5dU_rhXuNtgKbXPUXXqAhWWqkkqV-KGivKHtJ8cGmsFP0");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Greek Yogurt with Berries</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Breakfast - A simple and nutritious start to your day.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Greek yogurt, mixed berries, honey (optional).</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Lentil Soup" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBl6L__ihitd8mBmPcDvQvgC5P-eJR6xcSVJotrNQMHrz8Ad-7s9xXGsb41jIFVyURjx3370bCHOC1aTnmqEEoGcTPPY3Kpg550cWIbd2xBZBDDG1jpj4-P9XtK7gJgpM5uM8XRO5gmq7BlGP-BQnxXooG5a7R018fPqXZnvuHqe4do65feZElkQcw3MV7yISXwIfm4e8Y2FHhCeftkao9ABhB0elsdmNosHQ3W1LSi7nHaibwN48Apqm6HParALtQk2WpWTzScgAyg");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Lentil Soup</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Lunch - A hearty and comforting vegetarian soup.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Lentils, carrots, celery, onion, vegetable broth.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Chicken Stir-fry" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCk2oj3r_R1-m2SjfU00dLtqZ69954cHeFO1FqAfw2Zq4u8iQf0uhOBqBvplpDdduB2_zFAcOlM3U8pstFoBg-0QIX8eKA1fR8WEtaN43ijfIIzQIN9P5JQH16Z0ZsspWiLp0FjFGISMfjiKLdvk8G9xDBNtHcmbuWUJlxwWkcfWuiQmJLorVxnii9TVbSTBN3Qc__63TFTrRgejVGEbFiNM_qSfgsmWYiMngFHMd3wWjuA0bqX7ZxSBaF9BeCAXpJ6nYEf4qKpLhC8");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Chicken Stir-fry</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Dinner - A quick and customizable weeknight meal.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Chicken breast, mixed vegetables, soy sauce, ginger, garlic.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+</div>
+<h3 class="text-black dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] py-4">Wednesday</h3>
+<div class="space-y-4">
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Oatmeal with Nuts and Seeds" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAY7_WyIVPXuWRAB7MjeKBMsSpemGoGo3K9_gTa-7hu5l1xfInF0yEO7WUk05gOu8-Gj-U4_bjZKAvReaqcvWwK3sTVUzl-y9DRTbzCsAhZF-6gAm1XmjDaaFeTjSzp67jq_w-5sVQsP0LwjYW-dZLwLD-nqk50ZY6MKViJy9HGdRKQrycItROWgTSDR5xNRn8Api_6l55ZIBBJPYaVPljqItttiTzn7tPzIcyzgbv6zO5-Hdb4pDZ_QF6XHtWVu6QEguFL7PQt2sLb");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Oatmeal with Nuts and Seeds</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Breakfast - A warm and filling breakfast to power your day.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Rolled oats, milk (or water), mixed nuts, chia seeds, fruit.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Caprese Salad" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAX96twYdr1BZkKqfqlWnrN1I0_VUw_J-Xad_oHpfL7VNO34kD3x1nxoJnd3bGYymy46vW5U7iOR0v57q8rL_KsG_FfU6-3vijtpGY_gGAknkDCczl0KbXLnIzy0vzZacUVmk9Own_4Ega3oOMr5YBxMloOm4RFEn5nyPOR7sygD3MWRhT-UDg5ioUOTTgUc5AUTh00I7KqiUgkUlVt-Xlq6ol2EiGjYVgmKbkGvCDhhHJvoTO2KXeD3gVTrkogZcRv6aDCRjHX3gQv");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Caprese Salad</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Lunch - A refreshing and simple Italian classic.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Fresh mozzarella, ripe tomatoes, basil, balsamic glaze, olive oil.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4">
+<div class="w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl" data-alt="Pasta with Pesto and Cherry Tomatoes" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDcL8gYmC2Xxf-CIFyedna0uuUjxoywY2kqTXKsr6jp4uFUZsGRT7Gtnudc8m0fIc-z9a_7mdzJvTQl312tIwp2MTyoccUs-KrjvbgAV4cFwAbtUZOuqw3pvuwCRyaXQXzbrxp-Vx9_zMHdO0bDFjx-BsHT8VyMCPozb8VGbi3AcoR6HQbyFhFgOdywLKfEEUAtfLCRP0FoF9qT0u88DnU9kTCCjqaqQCz5eTESiY3-JUAlNJJU58jSZBx08QOwKaugq5lVY6dv5U6A");'></div>
+<div class="flex flex-col gap-1 flex-1">
+<p class="text-black dark:text-white text-base font-bold leading-tight">Pasta with Pesto and Cherry Tomatoes</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Dinner - A quick and flavorful vegetarian pasta dish.</p>
+<p class="text-zinc-500 dark:text-[#9eb7a8] text-sm font-normal leading-normal">Key Ingredients: Pasta, basil pesto, cherry tomatoes, Parmesan cheese.</p>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-background-dark text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Quick View Recipe</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>
