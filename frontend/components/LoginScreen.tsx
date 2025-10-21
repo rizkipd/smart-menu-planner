@@ -9,93 +9,172 @@ import {
   Alert,
   Image,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { Spacing } from '../constants/spacing';
 
 interface LoginScreenProps {
   onLogin: () => void;
   onSignUp: () => void;
 }
 
+const { width, height } = Dimensions.get('window');
+
+// Responsive breakpoints
+const isSmallScreen = width < 375; // iPhone SE
+const isMediumScreen = width >= 375 && width < 414; // iPhone 12/13
+const isLargeScreen = width >= 414; // iPhone Plus/Max and larger
+
+// Responsive spacing function
+const getResponsiveSpacing = (small: number, medium: number, large: number) => {
+  if (isSmallScreen) return small;
+  if (isMediumScreen) return medium;
+  return large;
+};
+
+// Responsive font size function
+const getResponsiveFontSize = (small: number, medium: number, large: number) => {
+  if (isSmallScreen) return small;
+  if (isMediumScreen) return medium;
+  return large;
+};
+
 export default function LoginScreen({ onLogin, onSignUp }: LoginScreenProps) {
+  // Form state
   const [email, setEmail] = useState('demo@example.com'); // Pre-filled for demo
   const [password, setPassword] = useState('password123'); // Pre-filled for demo
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{email?: string; password?: string}>({});
+
+  // Form validation
+  const validateForm = () => {
+    const newErrors: {email?: string; password?: string} = {};
+    
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+    if (!validateForm()) {
       return;
     }
     
     setLoading(true);
+    // Simulate API call
     setTimeout(() => {
       setLoading(false);
       onLogin();
     }, 1000);
   };
 
+  const handleQuickDemo = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      onLogin();
+    }, 500);
+  };
+
   const handleGoogleLogin = () => {
-    Alert.alert('Info', 'Google login will be implemented soon');
+    Alert.alert('Google Login', 'Google authentication will be implemented in the next phase');
   };
 
   const handleAppleLogin = () => {
-    Alert.alert('Info', 'Apple login will be implemented soon');
+    Alert.alert('Apple Login', 'Apple authentication will be implemented in the next phase');
   };
 
   const handleForgotPassword = () => {
-    Alert.alert('Forgot Password', 'Password reset will be implemented soon');
+    Alert.alert('Forgot Password', 'Password reset feature will be implemented in the next phase');
   };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-      <StatusBar barStyle="light-content" backgroundColor="#111714" />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.backgroundDark} />
       
-      {/* Exactly matching template structure */}
+      {/* Template-exact structure: relative flex-col min-h-screen w-full bg-background-dark p-4 */}
       <View style={styles.designRoot}>
-        {/* Main content area */}
+        {/* Main content area - template: flex-grow flex-col justify-center items-center */}
         <View style={styles.flexGrow}>
           <View style={styles.contentCenter}>
+            {/* Content container - template: max-w-md */}
             <View style={styles.maxWidthMd}>
-              {/* Logo section */}
+              
+              {/* Logo section - template: flex justify-center mb-8 */}
               <View style={styles.logoContainer}>
                 <View style={styles.svgLogo}>
-                  <MaterialIcons name="lightbulb" size={48} color="#38e07b" />
+                  <MaterialIcons 
+                    name="lightbulb" 
+                    size={48} 
+                    color={Colors.primary} 
+                  />
                 </View>
               </View>
               
-              {/* Welcome text */}
+              {/* Welcome text - template: text-white text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6 */}
               <Text style={styles.welcomeTitle}>Welcome Back</Text>
-              <Text style={styles.subtitle}>Log in to continue to your meal plan.</Text>
               
-              {/* Form fields */}
+              {/* Subtitle - template: text-gray-400 text-base font-normal leading-normal pb-6 px-4 text-center */}
+              <Text style={styles.subtitle}>
+                Log in to continue to your meal plan.
+              </Text>
+              
+              {/* Form container - template: flex-col gap-4 px-4 py-3 */}
               <View style={styles.formContainer}>
+                
                 {/* Email field */}
                 <View style={styles.fieldContainer}>
                   <Text style={styles.fieldLabel}>Email</Text>
                   <TextInput
-                    style={styles.textInput}
+                    style={[styles.textInput, errors.email && styles.inputError]}
                     placeholder="Enter your email"
-                    placeholderTextColor="#9eb7a8"
+                    placeholderTextColor={Colors.textMuted}
                     value={email}
-                    onChangeText={setEmail}
+                    onChangeText={(text) => {
+                      setEmail(text);
+                      if (errors.email) {
+                        setErrors(prev => ({...prev, email: undefined}));
+                      }
+                    }}
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    autoCorrect={false}
                   />
+                  {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
                 </View>
                 
                 {/* Password field */}
                 <View style={styles.fieldContainer}>
                   <Text style={styles.fieldLabel}>Password</Text>
-                  <View style={styles.passwordContainer}>
+                  <View style={[styles.passwordContainer, errors.password && styles.inputError]}>
                     <TextInput
                       style={styles.passwordInput}
                       placeholder="Enter your password"
-                      placeholderTextColor="#9eb7a8"
+                      placeholderTextColor={Colors.textMuted}
                       value={password}
-                      onChangeText={setPassword}
+                      onChangeText={(text) => {
+                        setPassword(text);
+                        if (errors.password) {
+                          setErrors(prev => ({...prev, password: undefined}));
+                        }
+                      }}
                       secureTextEntry={!showPassword}
+                      autoCorrect={false}
                     />
                     <TouchableOpacity 
                       style={styles.visibilityToggle}
@@ -104,56 +183,74 @@ export default function LoginScreen({ onLogin, onSignUp }: LoginScreenProps) {
                       <MaterialIcons 
                         name={showPassword ? "visibility-off" : "visibility"} 
                         size={24} 
-                        color="#9eb7a8" 
+                        color={Colors.textMuted} 
                       />
                     </TouchableOpacity>
                   </View>
+                  {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
                 </View>
               </View>
               
-              {/* Forgot password */}
+              {/* Forgot password - template: text-[#9eb7a8] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-right underline */}
               <TouchableOpacity onPress={handleForgotPassword}>
                 <Text style={styles.forgotPassword}>Forgot Password?</Text>
               </TouchableOpacity>
               
-              {/* Login button */}
+              {/* Login buttons container */}
               <View style={styles.loginButtonContainer}>
+                {/* Main login button - template: bg-primary h-12 rounded-xl */}
                 <TouchableOpacity 
-                  style={styles.loginButton}
+                  style={[styles.loginButton, loading && styles.buttonDisabled]}
                   onPress={handleLogin}
                   disabled={loading}
                 >
-                  <Text style={styles.loginButtonText}>Log In</Text>
+                  <Text style={styles.loginButtonText}>
+                    {loading ? 'Logging In...' : 'Log In'}
+                  </Text>
                 </TouchableOpacity>
                 
                 {/* Quick Demo Button */}
                 <TouchableOpacity 
-                  style={styles.demoButton}
-                  onPress={() => onLogin()}
+                  style={[styles.demoButton, loading && styles.buttonDisabled]}
+                  onPress={handleQuickDemo}
                   disabled={loading}
                 >
-                  <Text style={styles.demoButtonText}>🚀 Quick Demo (Skip Login)</Text>
+                  <Text style={styles.demoButtonText}>
+                    🚀 Quick Demo (Skip Login)
+                  </Text>
                 </TouchableOpacity>
               </View>
               
-              {/* Divider */}
+              {/* Divider - template: flex items-center px-4 my-6 */}
               <View style={styles.dividerContainer}>
                 <View style={styles.dividerLine} />
                 <Text style={styles.dividerText}>OR</Text>
                 <View style={styles.dividerLine} />
               </View>
               
-              {/* Social login buttons */}
+              {/* Social login buttons - template: flex-col gap-4 px-4 py-3 */}
               <View style={styles.socialButtonsContainer}>
-                <TouchableOpacity style={styles.socialButton} onPress={handleGoogleLogin}>
+                {/* Google login button */}
+                <TouchableOpacity 
+                  style={[styles.socialButton, loading && styles.buttonDisabled]} 
+                  onPress={handleGoogleLogin}
+                  disabled={loading}
+                >
                   <Image 
-                    source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXDL1f1i2EbgmjiFWJDvwHutqy3ng9pr6l-ud0OWL7iNPZX5c5Pn_bG-TxobjJbuztJzkC3JJADbqBslYO-2_Y_GkWqa26DsETZDsyJjFDOaXllYfyjIjiHFRbsayvLU_giPN7I9kYCRZCIWwq-sJi-_mkCeYlQ38Qh2kUAHm36FrhoEoO1VBsfDLMA2dlf3LEDqdlY99kXw1fXqC1YbDW94AvQx9XkTFx-SusMdrlsz4yh8kffk_jW16Ur4uo-ohBHy_FBq2EUF3m' }}
+                    source={{ 
+                      uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXDL1f1i2EbgmjiFWJDvwHutqy3ng9pr6l-ud0OWL7iNPZX5c5Pn_bG-TxobjJbuztJzkC3JJADbqBslYO-2_Y_GkWqa26DsETZDsyJjFDOaXllYfyjIjiHFRbsayvLU_giPN7I9kYCRZCIWwq-sJi-_mkCeYlQ38Qh2kUAHm36FrhoEoO1VBsfDLMA2dlf3LEDqdlY99kXw1fXqC1YbDW94AvQx9XkTFx-SusMdrlsz4yh8kffk_jW16Ur4uo-ohBHy_FBq2EUF3m' 
+                    }}
                     style={styles.socialIcon} 
                   />
                   <Text style={styles.socialButtonText}>Continue with Google</Text>
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={styles.socialButton} onPress={handleAppleLogin}>
+                {/* Apple login button */}
+                <TouchableOpacity 
+                  style={[styles.socialButton, loading && styles.buttonDisabled]} 
+                  onPress={handleAppleLogin}
+                  disabled={loading}
+                >
                   <View style={styles.appleIcon}>
                     <MaterialIcons name="apple" size={24} color="white" />
                   </View>
@@ -164,10 +261,13 @@ export default function LoginScreen({ onLogin, onSignUp }: LoginScreenProps) {
           </View>
         </View>
         
-        {/* Sign up link */}
+        {/* Sign up link - template: text-center py-4 */}
         <View style={styles.signUpContainer}>
           <Text style={styles.signUpText}>
-            Don't have an account? <Text style={styles.signUpLink} onPress={onSignUp}>Sign Up</Text>
+            Don't have an account?{' '}
+            <Text style={styles.signUpLink} onPress={onSignUp}>
+              Sign Up
+            </Text>
           </Text>
         </View>
       </View>
@@ -175,266 +275,344 @@ export default function LoginScreen({ onLogin, onSignUp }: LoginScreenProps) {
   );
 }
 
-// Exact template CSS converted to React Native
+// Template-exact styles converted to React Native
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111714', // template bg-background-dark
+    backgroundColor: Colors.backgroundDark,
   },
+  
   scrollContent: {
     flexGrow: 1,
+    minHeight: height,
   },
+  
+  // Design root - template: relative flex-col min-h-screen w-full bg-background-dark p-4 (responsive)
   designRoot: {
-    position: 'relative', // template relative
-    flexDirection: 'column', // template flex-col
-    minHeight: '100%', // template min-h-screen
-    width: '100%', // template w-full
-    backgroundColor: '#111714', // template bg-background-dark
-    padding: 16, // template p-4
-  },
-  flexGrow: {
-    flexGrow: 1, // template flex-grow
-    flexDirection: 'column', // template flex-col
-    justifyContent: 'center', // template justify-center
-    alignItems: 'center', // template items-center
-  },
-  contentCenter: {
-    flexDirection: 'column', // template flex-col
-    justifyContent: 'center', // template justify-center
-    alignItems: 'center', // template items-center
-  },
-  maxWidthMd: {
+    position: 'relative',
+    flexDirection: 'column',
+    minHeight: height,
     width: '100%',
-    maxWidth: 448, // template max-w-md
+    backgroundColor: Colors.backgroundDark,
+    padding: getResponsiveSpacing(8, 8, 12), // Reduced padding for wider elements
   },
-  logoContainer: {
-    justifyContent: 'center', // template justify-center
-    alignItems: 'center', // template flex (center)
-    marginBottom: 32, // template mb-8
-  },
-  svgLogo: {
-    width: 48,
-    height: 48,
+  
+  // Flex grow container - template: flex-grow flex-col justify-center items-center
+  flexGrow: {
+    flexGrow: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
+  // Content center - template: flex-col justify-center items-center
+  contentCenter: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  // Max width container - template: max-w-md
+  maxWidthMd: {
+    width: '100%',
+    maxWidth: 800, // Increased from 448px to 800px for wider login form
+  },
+  
+  // Logo container - template: flex justify-center mb-8 (responsive)
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: getResponsiveSpacing(20, 24, 32), // Responsive mb: small-20px, medium-24px, large-32px
+  },
+  
+  svgLogo: {
+    width: getResponsiveSpacing(36, 42, 48), // Responsive icon size
+    height: getResponsiveSpacing(36, 42, 48),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  // Welcome title - template: text-white text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6 (responsive)
   welcomeTitle: {
-    color: '#FFFFFF', // template text-white
-    fontSize: 32, // template text-[32px]
-    fontWeight: '700', // template font-bold
-    lineHeight: 38, // template leading-tight
-    paddingHorizontal: 16, // template px-4
-    textAlign: 'center', // template text-center
-    paddingBottom: 12, // template pb-3
-    paddingTop: 24, // template pt-6
-    // // fontFamily: 'Manrope', // template font-display
+    color: Colors.textDark,
+    fontSize: getResponsiveFontSize(24, 28, 32), // Responsive font: small-24px, medium-28px, large-32px
+    fontWeight: Typography.fontWeight.bold,
+    lineHeight: Typography.textStyles.loginTitle.lineHeight,
+    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
+    textAlign: 'center',
+    paddingBottom: getResponsiveSpacing(8, 10, 12), // Responsive pb
+    paddingTop: getResponsiveSpacing(16, 20, 24), // Responsive pt
+    fontFamily: Typography.fontFamily.display,
   },
+  
+  // Subtitle - template: text-gray-400 text-base font-normal leading-normal pb-6 px-4 text-center (responsive)
   subtitle: {
-    color: '#9CA3AF', // template text-gray-400
-    fontSize: 16, // template text-base
-    fontWeight: '400', // template font-normal
-    lineHeight: 24, // template leading-normal
-    paddingBottom: 24, // template pb-6
-    paddingHorizontal: 16, // template px-4
-    textAlign: 'center', // template text-center
-    // fontFamily: 'Manrope',
+    color: Colors.textGrayDark,
+    fontSize: getResponsiveFontSize(14, 15, 16), // Responsive font: small-14px, medium-15px, large-16px
+    fontWeight: Typography.fontWeight.normal,
+    lineHeight: Typography.textStyles.bodyText.lineHeight,
+    paddingBottom: getResponsiveSpacing(16, 20, 24), // Responsive pb: small-16px, medium-20px, large-24px
+    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
+    textAlign: 'center',
+    fontFamily: Typography.fontFamily.body,
   },
+  
+  // Form container - template: flex-col gap-4 px-4 py-3 (responsive)
   formContainer: {
-    flexDirection: 'column', // template flex-col
-    gap: 16, // template gap-4
-    paddingHorizontal: 16, // template px-4
-    paddingVertical: 12, // template py-3
+    flexDirection: 'column',
+    gap: getResponsiveSpacing(12, 14, 16), // Responsive gap: small-12px, medium-14px, large-16px
+    paddingHorizontal: getResponsiveSpacing(4, 8, 12), // Reduced horizontal padding for wider elements
+    paddingVertical: getResponsiveSpacing(8, 10, 12), // Responsive py
   },
+  
+  // Field container - template: flex-col min-w-40 (responsive)
   fieldContainer: {
-    flexDirection: 'column', // template flex-col
-    minWidth: 160, // template min-w-40
-    flex: 1,
+    flexDirection: 'column',
+    width: '100%', // Full width
+    maxWidth: 800, // Even wider max width
+    marginBottom: getResponsiveSpacing(2, 3, 4), // Small margin between fields
   },
+  
+  // Field label - template: text-white text-base font-medium leading-normal pb-2 (responsive)
   fieldLabel: {
-    color: '#FFFFFF', // template text-white
-    fontSize: 16, // template text-base
-    fontWeight: '500', // template font-medium
-    lineHeight: 23, // template leading-normal
-    paddingBottom: 8, // template pb-2
-    // fontFamily: 'Manrope',
+    color: Colors.textDark,
+    fontSize: getResponsiveFontSize(14, 15, 16), // Responsive font: small-14px, medium-15px, large-16px
+    fontWeight: Typography.fontWeight.medium,
+    lineHeight: Typography.textStyles.bodyText.lineHeight,
+    paddingBottom: getResponsiveSpacing(6, 7, 8), // Responsive pb: small-6px, medium-7px, large-8px
+    fontFamily: Typography.fontFamily.body,
   },
+  
+  // Text input - template: h-14 bg-[#29382f] rounded-xl p-4 text-white text-base font-normal leading-normal (responsive)
   textInput: {
-    flex: 1,
-    minHeight: 56, // template h-14
-    backgroundColor: '#29382f', // template bg-[#29382f]
-    borderRadius: 12, // template rounded-xl
-    paddingHorizontal: 16, // template p-4
-    paddingVertical: 16, // template p-4 (vertical centering)
-    color: '#FFFFFF', // template text-white
-    fontSize: 16, // template text-base
-    fontWeight: '400', // template font-normal
-    lineHeight: 23, // template leading-normal
+    height: getResponsiveSpacing(44, 48, 52), // Fixed height: small-44px, medium-48px, large-52px
+    backgroundColor: Colors.cardSecondary, // #29382f
+    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
+    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
+    paddingVertical: getResponsiveSpacing(10, 12, 14), // Responsive py
+    color: Colors.textDark,
+    fontSize: 18, // Increased to 18px
+    fontWeight: Typography.fontWeight.normal,
+    lineHeight: Typography.textStyles.bodyText.lineHeight,
     borderWidth: 0,
   },
+  
+  // Password container - template: flex items-stretch bg-[#29382f] rounded-xl (responsive)
   passwordContainer: {
-    flexDirection: 'row', // template flex
+    flexDirection: 'row',
     width: '100%',
-    flex: 1,
-    alignItems: 'stretch', // template items-stretch
-    backgroundColor: '#29382f', // template bg-[#29382f]
-    borderRadius: 12, // template rounded-xl
+    alignItems: 'stretch',
+    backgroundColor: Colors.cardSecondary,
+    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
   },
+  
+  // Password input (responsive)
   passwordInput: {
     flex: 1,
-    minHeight: 56, // template h-14
+    minHeight: getResponsiveSpacing(44, 48, 52), // Responsive h: small-44px, medium-48px, large-52px
     backgroundColor: 'transparent',
-    borderTopLeftRadius: 12, // template rounded-l-xl
-    borderBottomLeftRadius: 12, // template rounded-l-xl
-    paddingHorizontal: 16, // template p-4
-    paddingVertical: 16, // template p-4 (vertical centering)
-    paddingRight: 8, // template pr-2
-    color: '#FFFFFF', // template text-white
-    fontSize: 16, // template text-base
-    fontWeight: '400', // template font-normal
-    lineHeight: 23, // template leading-normal
+    borderTopLeftRadius: getResponsiveSpacing(10, 12, 14),
+    borderBottomLeftRadius: getResponsiveSpacing(10, 12, 14),
+    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
+    paddingVertical: getResponsiveSpacing(10, 12, 14), // Responsive py
+    paddingRight: getResponsiveSpacing(6, 8, 10), // Responsive pr
+    color: Colors.textDark,
+    fontSize: 18, // Increased to 18px
+    fontWeight: Typography.fontWeight.normal,
+    lineHeight: Typography.textStyles.bodyText.lineHeight,
     borderWidth: 0,
   },
+  
+  // Visibility toggle (responsive)
   visibilityToggle: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingRight: 16, // template pr-4
-    borderTopRightRadius: 12, // template rounded-r-xl
-    borderBottomRightRadius: 12, // template rounded-r-xl
-    borderStyle: 'solid',
-    borderWidth: 0,
+    paddingRight: getResponsiveSpacing(12, 16, 20), // Responsive pr
+    borderTopRightRadius: getResponsiveSpacing(10, 12, 14),
+    borderBottomRightRadius: getResponsiveSpacing(10, 12, 14),
   },
+  
+  // Input error styling
+  inputError: {
+    borderWidth: 1,
+    borderColor: Colors.error,
+  },
+  
+  // Error text
+  errorText: {
+    color: Colors.error,
+    fontSize: Typography.fontSize.sm,
+    marginTop: Spacing.xs,
+    fontFamily: Typography.fontFamily.body,
+  },
+  
+  // Forgot password - template: text-[#9eb7a8] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-right underline
   forgotPassword: {
-    color: '#9eb7a8', // template text-[#9eb7a8]
-    fontSize: 14, // template text-sm
-    fontWeight: '400', // template font-normal
-    lineHeight: 20, // template leading-normal
-    paddingBottom: 12, // template pb-3
-    paddingTop: 4, // template pt-1
-    paddingHorizontal: 16, // template px-4
-    textAlign: 'right', // template text-right
-    textDecorationLine: 'underline', // template underline
-    // fontFamily: 'Manrope',
+    color: Colors.textMuted,
+    fontSize: Typography.fontSize.sm,
+    fontWeight: Typography.fontWeight.normal,
+    lineHeight: Typography.fontSize.sm * Typography.lineHeight.normal,
+    paddingBottom: Spacing.md, // pb-3
+    paddingTop: Spacing.xs, // pt-1
+    paddingHorizontal: Spacing.lg, // px-4
+    textAlign: 'right',
+    textDecorationLine: 'underline',
+    fontFamily: Typography.fontFamily.body,
   },
+  
+  // Login button container
   loginButtonContainer: {
-    paddingHorizontal: 16, // template px-4
-    paddingVertical: 12, // template py-3
-    justifyContent: 'center', // template justify-center
-    marginTop: 16, // template mt-4
+    paddingHorizontal: 4, // Reduced horizontal padding for wider buttons
+    paddingVertical: Spacing.md, // py-3
+    justifyContent: 'center',
+    marginTop: Spacing.lg, // mt-4
   },
+  
+  // Login button - template: bg-primary h-12 rounded-xl px-5 (responsive)
   loginButton: {
-    flexDirection: 'row', // template flex
-    minWidth: 84, // template min-w-[84px]
-    maxWidth: 480, // template max-w-[480px]
-    justifyContent: 'center', // template items-center
-    alignItems: 'center', // template items-center
-    overflow: 'hidden', // template overflow-hidden
-    borderRadius: 12, // template rounded-xl
-    height: 48, // template h-12
-    paddingHorizontal: 20, // template px-5
-    flex: 1,
-    backgroundColor: '#38e07b', // template bg-primary
+    flexDirection: 'row',
+    width: '100%', // Full width
+    maxWidth: 800, // Even wider max width
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
+    height: getResponsiveSpacing(40, 44, 48), // Original height: small-40px, medium-44px, large-48px
+    paddingHorizontal: getResponsiveSpacing(16, 18, 20), // Responsive px
+    backgroundColor: Colors.primary,
+    marginBottom: getResponsiveSpacing(8, 10, 12), // Responsive mb
   },
+  
+  // Login button text - template: text-[#111714] text-base font-bold leading-normal tracking-[0.015em] (responsive)
   loginButtonText: {
-    color: '#111714', // template text-[#111714]
-    fontSize: 16, // template text-base
-    fontWeight: '700', // template font-bold
-    lineHeight: 23, // template leading-normal
-    letterSpacing: 0.24, // template tracking-[0.015em]
-    // fontFamily: 'Manrope',
+    color: Colors.backgroundDark, // Dark text on light button
+    fontSize: 18, // Increased to 18px
+    fontWeight: Typography.fontWeight.bold,
+    lineHeight: Typography.textStyles.buttonText.lineHeight,
+    letterSpacing: Typography.letterSpacing.template,
+    fontFamily: Typography.fontFamily.display,
   },
+  
+  // Demo button (responsive)
   demoButton: {
-    flexDirection: 'row', // template flex
-    minWidth: 84, // template min-w-[84px]
-    cursor: 'pointer', // template cursor-pointer
-    alignItems: 'center', // template items-center
-    justifyContent: 'center', // template justify-center
-    overflow: 'hidden', // template overflow-hidden
-    borderRadius: 12, // template rounded-xl
-    height: 48, // template h-12
-    paddingHorizontal: 20, // template px-5
-    flex: 1,
-    backgroundColor: 'rgba(102, 126, 234, 0.2)', // template bg-blue/20
+    flexDirection: 'row',
+    width: '100%', // Full width
+    maxWidth: 800, // Even wider max width
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
+    height: getResponsiveSpacing(40, 44, 48), // Original height: small-40px, medium-44px, large-48px
+    paddingHorizontal: getResponsiveSpacing(16, 18, 20), // Responsive px
+    backgroundColor: 'rgba(102, 126, 234, 0.2)',
     borderWidth: 1,
     borderColor: 'rgba(102, 126, 234, 0.4)',
-    marginTop: 12, // template mt-3
   },
+  
+  // Demo button text
   demoButtonText: {
-    color: '#667eea', // template text-blue
-    fontSize: 16, // template text-base
-    fontWeight: '600', // template font-semibold
-    lineHeight: 23, // template leading-normal
-    letterSpacing: 0.24, // template tracking-[0.015em]
-    // fontFamily: 'Manrope',
+    color: '#667eea',
+    fontSize: 18, // Increased to 18px
+    fontWeight: Typography.fontWeight.semibold,
+    lineHeight: Typography.textStyles.buttonText.lineHeight,
+    letterSpacing: Typography.letterSpacing.template,
+    fontFamily: Typography.fontFamily.display,
   },
+  
+  // Button disabled state
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  
+  // Divider container - template: flex items-center px-4 my-6
   dividerContainer: {
-    flexDirection: 'row', // template flex
-    alignItems: 'center', // template items-center
-    paddingHorizontal: 16, // template px-4
-    marginVertical: 24, // template my-6
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.lg, // px-4
+    marginVertical: Spacing.xl, // my-6
   },
+  
+  // Divider line - template: flex-grow border-t border-gray-700
   dividerLine: {
-    flexGrow: 1, // template flex-grow
-    borderTopWidth: 1, // template border-t
-    borderColor: '#374151', // template border-gray-700
+    flexGrow: 1,
+    borderTopWidth: 1,
+    borderColor: Colors.borderDark,
   },
+  
+  // Divider text - template: px-4 text-gray-500 text-sm
   dividerText: {
-    paddingHorizontal: 16, // template px-4
-    color: '#6B7280', // template text-gray-500
-    fontSize: 14, // template text-sm
-    // fontFamily: 'Manrope',
+    paddingHorizontal: Spacing.lg, // px-4
+    color: Colors.textGray,
+    fontSize: Typography.fontSize.sm,
+    fontFamily: Typography.fontFamily.body,
   },
+  
+  // Social buttons container - template: flex-col gap-4 px-4 py-3 (responsive)
   socialButtonsContainer: {
-    flexDirection: 'column', // template flex-col
-    gap: 16, // template gap-4
-    paddingHorizontal: 16, // template px-4
-    paddingVertical: 12, // template py-3
+    flexDirection: 'column',
+    gap: getResponsiveSpacing(12, 14, 16), // Responsive gap: small-12px, medium-14px, large-16px
+    paddingHorizontal: getResponsiveSpacing(4, 8, 12), // Reduced horizontal padding for wider buttons
+    paddingVertical: getResponsiveSpacing(8, 10, 12), // Responsive py
   },
+  
+  // Social button - template: bg-[#29382f] h-12 rounded-xl px-5 (responsive)
   socialButton: {
-    flexDirection: 'row', // template flex
-    minWidth: 84, // template min-w-[84px]
-    maxWidth: 480, // template max-w-[480px]
-    justifyContent: 'center', // template items-center
-    alignItems: 'center', // template items-center
-    overflow: 'hidden', // template overflow-hidden
-    borderRadius: 12, // template rounded-xl
-    height: 48, // template h-12
-    paddingHorizontal: 20, // template px-5
-    flex: 1,
-    backgroundColor: '#29382f', // template bg-[#29382f]
+    flexDirection: 'row',
+    width: '100%', // Full width
+    maxWidth: 800, // Even wider max width
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
+    height: getResponsiveSpacing(40, 44, 48), // Original height: small-40px, medium-44px, large-48px
+    paddingHorizontal: getResponsiveSpacing(16, 18, 20), // Responsive px
+    backgroundColor: Colors.cardSecondary, // #29382f
   },
+  
+  // Social icon - template: w-6 h-6 mr-3 (responsive)
   socialIcon: {
-    width: 24, // template w-6
-    height: 24, // template h-6
-    marginRight: 12, // template mr-3
+    width: getResponsiveSpacing(18, 21, 24), // Responsive w: small-18px, medium-21px, large-24px
+    height: getResponsiveSpacing(18, 21, 24), // Responsive h: small-18px, medium-21px, large-24px
+    marginRight: getResponsiveSpacing(10, 12, 14), // Responsive mr: small-10px, medium-12px, large-14px
   },
+  
+  // Apple icon container
   appleIcon: {
-    width: 24, // template w-6
-    height: 24, // template h-6
-    marginRight: 12, // template mr-3
+    width: Spacing.widths.icon,
+    height: Spacing.widths.icon,
+    marginRight: Spacing.md,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
+  // Social button text - template: text-white text-base font-medium leading-normal tracking-[0.015em]
   socialButtonText: {
-    color: '#FFFFFF', // template text-white
-    fontSize: 16, // template text-base
-    fontWeight: '500', // template font-medium
-    lineHeight: 23, // template leading-normal
-    letterSpacing: 0.24, // template tracking-[0.015em]
-    // fontFamily: 'Manrope',
+    color: Colors.textDark,
+    fontSize: 18, // Increased to 18px
+    fontWeight: Typography.fontWeight.medium,
+    lineHeight: Typography.textStyles.bodyText.lineHeight,
+    letterSpacing: Typography.letterSpacing.template,
+    fontFamily: Typography.fontFamily.body,
   },
+  
+  // Sign up container - template: text-center py-4
   signUpContainer: {
-    textAlign: 'center', // template text-center
-    paddingVertical: 16, // template py-4
+    alignItems: 'center',
+    paddingVertical: Spacing.lg, // py-4
   },
+  
+  // Sign up text - template: text-[#9eb7a8] text-sm
   signUpText: {
-    color: '#9eb7a8', // template text-[#9eb7a8]
-    fontSize: 14, // template text-sm
-    // fontFamily: 'Manrope',
+    color: Colors.textMuted,
+    fontSize: Typography.fontSize.sm,
+    fontFamily: Typography.fontFamily.body,
   },
+  
+  // Sign up link - template: text-primary font-bold underline
   signUpLink: {
-    color: '#38e07b', // template text-primary
-    fontWeight: '700', // template font-bold
-    textDecorationLine: 'underline', // template underline
-    // fontFamily: 'Manrope',
+    color: Colors.primary,
+    fontWeight: Typography.fontWeight.bold,
+    textDecorationLine: 'underline',
+    fontFamily: Typography.fontFamily.body,
   },
 });
