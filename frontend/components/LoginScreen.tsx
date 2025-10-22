@@ -18,6 +18,7 @@ import { Spacing } from '../constants/spacing';
 
 interface LoginScreenProps {
   onLogin: () => void;
+  onQuickDemo: () => void;
   onSignUp: () => void;
 }
 
@@ -42,7 +43,7 @@ const getResponsiveFontSize = (small: number, medium: number, large: number) => 
   return large;
 };
 
-export default function LoginScreen({ onLogin, onSignUp }: LoginScreenProps) {
+export default function LoginScreen({ onLogin, onQuickDemo, onSignUp }: LoginScreenProps) {
   // Form state
   const [email, setEmail] = useState('demo@example.com'); // Pre-filled for demo
   const [password, setPassword] = useState('password123'); // Pre-filled for demo

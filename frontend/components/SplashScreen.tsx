@@ -78,7 +78,7 @@ export default function SplashScreen({ onFinish }: SplashScreenProps) {
         
         {/* Gradient overlay - template: bg-gradient-to-t from-background-light/50 to-transparent */}
         <LinearGradient
-          colors={Colors.gradients.splash}
+          colors={Colors.gradients.splash as [string, string]}
           style={styles.gradientOverlay}
         />
         

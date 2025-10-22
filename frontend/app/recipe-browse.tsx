@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   // Action Buttons - template: flex justify-stretch px-4 py-3
   actionContainer: {
     flexDirection: 'row',
-    justifyContent: 'stretch',
+    justifyContent: 'space-between',
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     gap: Spacing.lg,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,66 +9,230 @@ import {
   TextInput,
   Image,
   Dimensions,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
-import { Typography } from '../../constants/typography';
 import { Spacing } from '../../constants/spacing';
 import { useRouter } from 'expo-router';
+import MobileApiService from '../../services/api';
 
 const { width } = Dimensions.get('window');
 
-// Sample favorite meal plans data from template
-const favoritePlans = [
+// Extended interface for favorite plans with UI properties
+interface FavoritePlan {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  mode: string;
+  created_at: string;
+  preview?: string;
+}
+
+// Available plan modes for filtering
+const filterChips = [
+  { label: 'diet', displayName: 'Dietary', active: true },
+  { label: 'budget', displayName: 'Budget', active: false },
+  { label: 'time', displayName: 'Quick & Easy', active: false },
+  { label: 'health', displayName: 'Health', active: false },
+  { label: 'family', displayName: 'Family', active: false },
+];
+
+// Fallback favorite plans data (same as original template)
+const fallbackFavoritePlans: FavoritePlan[] = [
   {
     id: 1,
     title: 'Weekly Keto Plan',
     description: '7-day low-carb meals',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDyvHVS8S9bb1DQohpzVUbz0oTuDxCvVlqoufKxpTMaaAXmaXkI2Ohk1hXDiEuLTY2duXmpLpMclBFOHLrFuqIFb7Sf-WxengQ-hqAPegj_wwTAvykRwKIaHRFVMHSbti4y8Y2Bd6JW2x6m16M17KEPYMofFivKBZcQoRmEOHN1pQvtsdK6s-bfNploJj18zHUuzVAU8kgjgX8rHUP-adKgIhlUxq4Z67iQSrMxH2B2phERNrrxFvY2P1uIxb0oip9F9zePQWcaePLK',
-    category: 'Low-Carb'
+    category: 'Low-Carb',
+    mode: 'diet',
+    created_at: '2024-01-15T10:30:00Z'
   },
   {
     id: 2,
     title: 'Vegan Delight',
     description: 'Plant-based recipes',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAD3uZdDTIHAG2ssmt2UNzk1FisvouKxQvvZ09qhK4bdlv0D6LuwHGEW70dP-U7oJFJJ-A9Wkf6GsS935SsoOFfrdu6kP6jq1ufgYCIs2QjsHjiU62pQmaqbnaELkVSb2VJuh0KhiET_Lqhz5x-PyeakwVIyN1iz_EtWqaiucZejtr9ZF5gnVEtZJ7SbisNpfLr8ieWU4zp3v2rD5U8hq01P_odvOj5QIj4cG92kP9fKHkt2NS-qfgXctvE9kqWsI1Ana2Eyst_Z5CE',
-    category: 'Vegan'
+    category: 'Vegan',
+    mode: 'health',
+    created_at: '2024-01-14T14:20:00Z'
   },
   {
     id: 3,
     title: 'Family Favorites',
     description: 'Kid-friendly dinners',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAj_gYAdm-o0T40IkiLwJ-rI1nbOfU4s1O8BuE--F1HOyH2nmBNNzxXd1gF6dkPA7wIY7QWaPR7HjbhhaiFVsKopQ4oCe1Hk1c_d-fkj9zItZxCBX61BiTx9G3-lxQ1l5HuY5K3qWn-7pa9-xTfKpkmXgNHtogIzzGvza8hIC53gutghfrNlwOW7zHCbyO11wzYxvOlaeLMxiNhK9m1-M_yo9BB0xzXJeqplD82vLB-qLS_G47DCdhqVl2N4e2tHGWyT6mZqPx6AxA7',
-    category: 'Quick & Easy'
+    category: 'Quick & Easy',
+    mode: 'family',
+    created_at: '2024-01-13T09:15:00Z'
   },
   {
     id: 4,
     title: 'High-Protein Week',
     description: 'Energizing meal plan',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBQQs9iMQLADE42d-z8HymtURECGRXj5rds7n-dNwQGqL9z28FZl_jY6O56wKY7outLSbVOKu0SyDVv-pdOyeEx8BQZJfPkL-9XMIa7TIEeJLGrOjMVQQqit5qWgO_vyWQFp-BChYwrv_MASGI2PeVo_xeEwBkljFwB03TiXw1nLX9fXKvxNiiEFLhDeTe8tlu4sqRh34DQFolSPvOo2xp8gT-cgBqZx-2rT4O5V9OxdFpSw3_TlOBA1Srnx7BGYI6hiVh2-TTxOtBE',
-    category: 'High-Protein'
+    category: 'High-Protein',
+    mode: 'health',
+    created_at: '2024-01-12T16:45:00Z'
   },
-];
-
-const filterChips = [
-  { label: 'Vegan', active: true },
-  { label: 'Low-Carb', active: false },
-  { label: 'High-Protein', active: false },
-  { label: 'Vegetarian', active: false },
-  { label: 'Quick & Easy', active: false },
 ];
 
 export default function Favorites() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilters, setActiveFilters] = useState(['Vegan']);
+  const [activeFilters, setActiveFilters] = useState(['diet']);
+  const [loading, setLoading] = useState(false);
+  const [favoritePlans, setFavoritePlans] = useState<FavoritePlan[]>([]);
+  const [favoriteIds, setFavoriteIds] = useState<Set<number>>(new Set());
+
+  // Filter and search plans
+  const filteredFavoritePlans = favoritePlans.filter(plan => {
+    const matchesSearch = plan.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         plan.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         plan.category.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesFilter = activeFilters.length === 0 || activeFilters.includes(plan.mode);
+    
+    return matchesSearch && matchesFilter;
+  });
+
+  // Load favorite plans on component mount
+  useEffect(() => {
+    loadFavoritePlans();
+  }, []);
+
+  const loadFavoritePlans = async () => {
+    try {
+      setLoading(true);
+      console.log('❤️ Loading favorite plans from API...');
+      
+      // Load popular plans from multiple modes to simulate favorites
+      const modes = ['diet', 'budget', 'time', 'health', 'family'];
+      const allPlans: FavoritePlan[] = [];
+      
+      for (const mode of modes) {
+        try {
+          const response = await MobileApiService.getPopularPlans(mode, 5);
+          console.log(`❤️ API Response for ${mode}:`, response);
+          if (response.success && response.data) {
+            const transformedPlans = response.data.popular_plans.map(plan => ({
+              id: plan.id,
+              title: generatePlanTitle(mode, plan.id),
+              description: plan.preview || generatePlanDescription(mode),
+              image: getImageForMode(mode),
+              category: getCategoryForMode(mode),
+              mode: mode,
+              created_at: plan.created_at,
+              preview: plan.preview
+            }));
+            allPlans.push(...transformedPlans);
+          }
+        } catch (error) {
+          console.warn(`❤️ Failed to load plans for mode ${mode}:`, error);
+        }
+      }
+      
+      if (allPlans.length > 0) {
+        // Select first 6 plans as "favorites" and shuffle them
+        const shuffledPlans = allPlans.sort(() => Math.random() - 0.5).slice(0, 6);
+        setFavoritePlans(shuffledPlans);
+        setFavoriteIds(new Set(shuffledPlans.map(plan => plan.id)));
+      } else {
+        // Use fallback data if API fails
+        setFavoritePlans(fallbackFavoritePlans);
+        setFavoriteIds(new Set(fallbackFavoritePlans.map(plan => plan.id)));
+      }
+    } catch (error) {
+      console.error('Failed to load favorite plans:', error);
+      // Use fallback data
+      setFavoritePlans(fallbackFavoritePlans);
+      setFavoriteIds(new Set(fallbackFavoritePlans.map(plan => plan.id)));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generatePlanTitle = (mode: string, id: number): string => {
+    const titles = {
+      diet: [`Keto Weekly Plan #${id}`, `Mediterranean Diet ${id}`, `Low-Carb Delights ${id}`],
+      budget: [`Budget Meals #${id}`, `Affordable Week ${id}`, `Economic Eats ${id}`],
+      time: [`Quick & Easy #${id}`, `15-Min Meals ${id}`, `Fast Family Food ${id}`],
+      health: [`Healthy Living #${id}`, `Nutritious Week ${id}`, `Wellness Plan ${id}`],
+      family: [`Family Favorites #${id}`, `Kid-Friendly ${id}`, `Parent Approved ${id}`]
+    };
+    const modeTitle = titles[mode as keyof typeof titles] || [`Plan #${id}`];
+    return modeTitle[id % modeTitle.length];
+  };
+
+  const generatePlanDescription = (mode: string): string => {
+    const descriptions = {
+      diet: '7-day specialized diet meal plan',
+      budget: 'Affordable meals for the whole week',
+      time: 'Quick meals for busy schedules',
+      health: 'Nutritious and balanced meal plan',
+      family: 'Kid-friendly family dinners'
+    };
+    return descriptions[mode as keyof typeof descriptions] || 'Custom meal plan';
+  };
+
+  const getImageForMode = (mode: string): string => {
+    const images = {
+      diet: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDyvHVS8S9bb1DQohpzVUbz0oTuDxCvVlqoufKxpTMaaAXmaXkI2Ohk1hXDiEuLTY2duXmpLpMclBFOHLrFuqIFb7Sf-WxengQ-hqAPegj_wwTAvykRwKIaHRFVMHSbti4y8Y2Bd6JW2x6m16M17KEPYMofFivKBZcQoRmEOHN1pQvtsdK6s-bfNploJj18zHUuzVAU8kgjgX8rHUP-adKgIhlUxq4Z67iQSrMxH2B2phERNrrxFvY2P1uIxb0oip9F9zePQWcaePLK',
+      budget: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAD3uZdDTIHAG2ssmt2UNzk1FisvouKxQvvZ09qhK4bdlv0D6LuwHGEW70dP-U7oJFJJ-A9Wkf6GsS935SsoOFfrdu6kP6jq1ufgYCIs2QjsHjiU62pQmaqbnaELkVSb2VJuh0KhiET_Lqhz5x-PyeakwVIyN1iz_EtWqaiucZejtr9ZF5gnVEtZJ7SbisNpfLr8ieWU4zp3v2rD5U8hq01P_odvOj5QIj4cG92kP9fKHkt2NS-qfgXctvE9kqWsI1Ana2Eyst_Z5CE',
+      time: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAj_gYAdm-o0T40IkiLwJ-rI1nbOfU4s1O8BuE--F1HOyH2nmBNNzxXd1gF6dkPA7wIY7QWaPR7HjbhhaiFVsKopQ4oCe1Hk1c_d-fkj9zItZxCBX61BiTx9G3-lxQ1l5HuY5K3qWn-7pa9-xTfKpkmXgNHtogIzzGvza8hIC53gutghfrNlwOW7zHCbyO11wzYxvOlaeLMxiNhK9m1-M_yo9BB0xzXJeqplD82vLB-qLS_G47DCdhqVl2N4e2tHGWyT6mZqPx6AxA7',
+      health: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBQQs9iMQLADE42d-z8HymtURECGRXj5rds7n-dNwQGqL9z28FZl_jY6O56wKY7outLSbVOKu0SyDVv-pdOyeEx8BQZJfPkL-9XMIa7TIEeJLGrOjMVQQqit5qWgO_vyWQFp-BChYwrv_MASGI2PeVo_xeEwBkljFwB03TiXw1nLX9fXKvxNiiEFLhDeTe8tlu4sqRh34DQFolSPvOo2xp8gT-cgBqZx-2rT4O5V9OxdFpSw3_TlOBA1Srnx7BGYI6hiVh2-TTxOtBE',
+      family: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAj_gYAdm-o0T40IkiLwJ-rI1nbOfU4s1O8BuE--F1HOyH2nmBNNzxXd1gF6dkPA7wIY7QWaPR7HjbhhaiFVsKopQ4oCe1Hk1c_d-fkj9zItZxCBX61BiTx9G3-lxQ1l5HuY5K3qWn-7pa9-xTfKpkmXgNHtogIzzGvza8hIC53gutghfrNlwOW7zHCbyO11wzYxvOlaeLMxiNhK9m1-M_yo9BB0xzXJeqplD82vLB-qLS_G47DCdhqVl2N4e2tHGWyT6mZqPx6AxA7'
+    };
+    return images[mode as keyof typeof images] || images.diet;
+  };
+
+  const getCategoryForMode = (mode: string): string => {
+    const categories = {
+      diet: 'Diet Plan',
+      budget: 'Budget-Friendly',
+      time: 'Quick & Easy',
+      health: 'Health Focus',
+      family: 'Family Style'
+    };
+    return categories[mode as keyof typeof categories] || 'Custom';
+  };
 
   const handleBack = () => {
     router.back();
   };
 
   const handleSort = () => {
-    console.log('Sort favorites');
+    Alert.alert(
+      'Sort Options',
+      'Choose how to sort your favorites:',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'By Date', onPress: () => sortFavorites('date') },
+        { text: 'By Name', onPress: () => sortFavorites('name') },
+        { text: 'By Category', onPress: () => sortFavorites('category') }
+      ]
+    );
+  };
+
+  const sortFavorites = (sortBy: 'date' | 'name' | 'category') => {
+    setFavoritePlans(prev => {
+      const sorted = [...prev].sort((a, b) => {
+        switch (sortBy) {
+          case 'date':
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          case 'name':
+            return a.title.localeCompare(b.title);
+          case 'category':
+            return a.category.localeCompare(b.category);
+          default:
+            return 0;
+        }
+      });
+      return sorted;
+    });
   };
 
   const toggleFilter = (filter: string) => {
@@ -79,8 +243,45 @@ export default function Favorites() {
     );
   };
 
-  const handlePlanPress = (planId: number) => {
-    console.log('Selected plan:', planId);
+  const toggleFavorite = async (planId: number) => {
+    const newFavoriteIds = new Set(favoriteIds);
+    if (newFavoriteIds.has(planId)) {
+      newFavoriteIds.delete(planId);
+      setFavoritePlans(prev => prev.filter(plan => plan.id !== planId));
+    } else {
+      newFavoriteIds.add(planId);
+      // In a real app, you'd fetch the plan details and add it to favorites
+    }
+    setFavoriteIds(newFavoriteIds);
+  };
+
+  const handlePlanPress = async (planId: number) => {
+    try {
+      const response = await MobileApiService.getPlanDetails(planId);
+      if (response.success && response.data) {
+        Alert.alert(
+          'Plan Details',
+          `Plan ID: ${planId}\nMode: ${response.data.mode}\nCreated: ${new Date(response.data.created_at).toLocaleDateString()}`,
+          [
+            { text: 'OK' },
+            { text: 'View Details', onPress: () => console.log('Navigate to plan details', planId) }
+          ]
+        );
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load plan details');
+    }
+  };
+
+  const refreshFavorites = async () => {
+    Alert.alert(
+      'Refresh Favorites',
+      'This will reload your favorite meal plans from the server.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Refresh', onPress: loadFavoritePlans }
+      ]
+    );
   };
 
   return (
@@ -116,59 +317,81 @@ export default function Favorites() {
         </View>
 
         {/* Filter Chips - template: flex gap-3 p-3 overflow-x-auto */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          style={styles.chipsContainer}
-          contentContainerStyle={styles.chipsContent}
-        >
-          {filterChips.map((chip, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.filterChip,
-                activeFilters.includes(chip.label) && styles.activeFilterChip
-              ]}
-              onPress={() => toggleFilter(chip.label)}
-            >
-              <Text style={[
-                styles.filterChipText,
-                activeFilters.includes(chip.label) && styles.activeFilterChipText
-              ]}>
-                {chip.label}
-              </Text>
-              <Text style={[
-                styles.dropdownIcon,
-                { color: activeFilters.includes(chip.label) ? Colors.primary : Colors.textDark }
-              ]}>
-                ▼
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        <View style={styles.filtersRow}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.chipsContainer}
+            contentContainerStyle={styles.chipsContent}
+          >
+            {filterChips.map((chip, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.filterChip,
+                  activeFilters.includes(chip.label) && styles.activeFilterChip
+                ]}
+                onPress={() => toggleFilter(chip.label)}
+              >
+                <Text style={[
+                  styles.filterChipText,
+                  activeFilters.includes(chip.label) && styles.activeFilterChipText
+                ]}>
+                  {chip.displayName}
+                </Text>
+                <Text style={[
+                  styles.dropdownIcon,
+                  { color: activeFilters.includes(chip.label) ? Colors.primary : Colors.textDark }
+                ]}>
+                  ▼
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <TouchableOpacity style={styles.refreshButton} onPress={refreshFavorites}>
+            <Text style={styles.refreshIcon}>↻</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Image Grid - template: grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-4 p-4 flex-1 */}
         <ScrollView style={styles.gridContainer} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          <View style={styles.grid}>
-            {favoritePlans.map((plan) => (
-              <TouchableOpacity
-                key={plan.id}
-                style={styles.planCard}
-                onPress={() => handlePlanPress(plan.id)}
-              >
-                <View style={styles.planImageContainer}>
-                  <Image source={{ uri: plan.image }} style={styles.planImage} />
-                  <View style={styles.favoriteIcon}>
-                    <Text style={styles.heartIcon}>♥</Text>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={Colors.primary} />
+              <Text style={styles.loadingText}>Loading favorites...</Text>
+            </View>
+          ) : (
+            <View style={styles.grid}>
+              {filteredFavoritePlans.map((plan) => (
+                <TouchableOpacity
+                  key={plan.id}
+                  style={styles.planCard}
+                  onPress={() => handlePlanPress(plan.id)}
+                >
+                  <View style={styles.planImageContainer}>
+                    <Image source={{ uri: plan.image }} style={styles.planImage} />
+                    <TouchableOpacity 
+                      style={styles.favoriteIcon}
+                      onPress={() => toggleFavorite(plan.id)}
+                    >
+                      <Text style={[styles.heartIcon, favoriteIds.has(plan.id) && styles.heartIconActive]}>♥</Text>
+                    </TouchableOpacity>
                   </View>
+                  <View style={styles.planInfo}>
+                    <Text style={styles.planTitle}>{plan.title}</Text>
+                    <Text style={styles.planDescription}>{plan.description}</Text>
+                    <Text style={styles.planCategory}>{plan.category}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+              {filteredFavoritePlans.length === 0 && !loading && (
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyText}>No favorites found</Text>
+                  <Text style={styles.emptySubtext}>Try adjusting your filters or add some plans to favorites</Text>
                 </View>
-                <View style={styles.planInfo}>
-                  <Text style={styles.planTitle}>{plan.title}</Text>
-                  <Text style={styles.planDescription}>{plan.description}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
+              )}
+            </View>
+          )}
         </ScrollView>
       </View>
     </View>
@@ -225,8 +448,52 @@ const styles = StyleSheet.create({
   },
 
   heartIcon: {
-    color: Colors.primary,
+    color: Colors.textMuted,
     fontSize: 16,
+  },
+
+  heartIconActive: {
+    color: Colors.primary,
+  },
+
+  refreshIcon: {
+    color: Colors.textDark,
+    fontSize: 20,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+
+  loadingText: {
+    color: Colors.textMuted,
+    fontSize: 16,
+    marginTop: 12,
+  },
+
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+    width: '100%',
+  },
+
+  emptyText: {
+    color: Colors.textDark,
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+
+  emptySubtext: {
+    color: Colors.textMuted,
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
   },
   
   headerTitle: {
@@ -280,8 +547,22 @@ const styles = StyleSheet.create({
   },
   
   // Filter Chips - template: flex gap-3 p-3 overflow-x-auto
+  filtersRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.md,
+  },
+
   chipsContainer: {
-    flexGrow: 0,
+    flex: 1,
+  },
+
+  refreshButton: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: Spacing.sm,
   },
   
   chipsContent: {
@@ -385,5 +666,12 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
     fontSize: 14,
     fontWeight: '400',
+    marginBottom: 4,
+  },
+
+  planCategory: {
+    color: Colors.primary,
+    fontSize: 12,
+    fontWeight: '500',
   },
 });

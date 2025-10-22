@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,22 +9,146 @@ import {
   Image,
   TextInput,
   Switch,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Colors } from '../../constants/colors';
-import { Typography } from '../../constants/typography';
 import { Spacing } from '../../constants/spacing';
+import UserProfileService, { UserProfile } from '../../services/userProfile';
 
 export default function Profile() {
-  const [includeBreakfast, setIncludeBreakfast] = useState(true);
-  const [includeLunch, setIncludeLunch] = useState(true);
-  const [includeDinner, setIncludeDinner] = useState(true);
-  const [includeSnacks, setIncludeSnacks] = useState(false);
-  const [pushNotifications, setPushNotifications] = useState(true);
-  const [servings, setServings] = useState(2);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [allergyInput, setAllergyInput] = useState('');
+  const [likedInput, setLikedInput] = useState('');
+  const [dislikedInput, setDislikedInput] = useState('');
+
+  // Load profile on component mount
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const loadProfile = async () => {
+    try {
+      setLoading(true);
+      const userProfile = await UserProfileService.loadProfile();
+      setProfile(userProfile);
+    } catch (error) {
+      console.error('Failed to load profile:', error);
+      Alert.alert('Error', 'Failed to load profile settings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateProfile = async (updates: Partial<UserProfile>) => {
+    if (!profile) return;
+    
+    try {
+      setSaving(true);
+      const updatedProfile = await UserProfileService.updateProfile(updates);
+      setProfile(updatedProfile);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      Alert.alert('Error', 'Failed to save profile settings');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAddAllergy = async () => {
+    if (!allergyInput.trim()) return;
+    
+    try {
+      const updatedProfile = await UserProfileService.addAllergy(allergyInput.trim());
+      setProfile(updatedProfile);
+      setAllergyInput('');
+    } catch (error) {
+      console.error('Failed to add allergy:', error);
+      Alert.alert('Error', 'Failed to add allergy');
+    }
+  };
+
+  const handleRemoveAllergy = async (allergy: string) => {
+    try {
+      const updatedProfile = await UserProfileService.removeAllergy(allergy);
+      setProfile(updatedProfile);
+    } catch (error) {
+      console.error('Failed to remove allergy:', error);
+      Alert.alert('Error', 'Failed to remove allergy');
+    }
+  };
+
+  const handleAddLiked = async () => {
+    if (!likedInput.trim()) return;
+    
+    try {
+      const updatedProfile = await UserProfileService.addLikedIngredient(likedInput.trim());
+      setProfile(updatedProfile);
+      setLikedInput('');
+    } catch (error) {
+      console.error('Failed to add liked ingredient:', error);
+      Alert.alert('Error', 'Failed to add liked ingredient');
+    }
+  };
+
+  const handleRemoveLiked = async (ingredient: string) => {
+    try {
+      const updatedProfile = await UserProfileService.removeLikedIngredient(ingredient);
+      setProfile(updatedProfile);
+    } catch (error) {
+      console.error('Failed to remove liked ingredient:', error);
+      Alert.alert('Error', 'Failed to remove liked ingredient');
+    }
+  };
+
+  const handleAddDisliked = async () => {
+    if (!dislikedInput.trim()) return;
+    
+    try {
+      const updatedProfile = await UserProfileService.addDislikedIngredient(dislikedInput.trim());
+      setProfile(updatedProfile);
+      setDislikedInput('');
+    } catch (error) {
+      console.error('Failed to add disliked ingredient:', error);
+      Alert.alert('Error', 'Failed to add disliked ingredient');
+    }
+  };
+
+  const handleRemoveDisliked = async (ingredient: string) => {
+    try {
+      const updatedProfile = await UserProfileService.removeDislikedIngredient(ingredient);
+      setProfile(updatedProfile);
+    } catch (error) {
+      console.error('Failed to remove disliked ingredient:', error);
+      Alert.alert('Error', 'Failed to remove disliked ingredient');
+    }
+  };
 
   const handleBack = () => {
     console.log('Back pressed');
   };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+        <Text style={styles.loadingText}>Loading profile...</Text>
+      </View>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <View style={[styles.container, styles.loadingContainer]}>
+        <Text style={styles.errorText}>Failed to load profile</Text>
+        <TouchableOpacity style={styles.retryButton} onPress={loadProfile}>
+          <Text style={styles.retryButtonText}>Retry</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -47,7 +171,7 @@ export default function Profile() {
               <View style={styles.profileInfo}>
                 <View style={styles.avatarContainer}>
                   <Image 
-                    source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDU9tQMrdGm3Z8-aGXtUCAO1iOrK5Igs6M3V2jbViXWOmlap-ciRrRC3P7U0pHbLNe1zAt0kUtIJThfQpZW8dlplw6og_d4JVTVhQjBWyDUNNhm6DXiHu8cDigyv99ACtjcUy829K2WbSJAKUuUJieaV-YN9kzaffyYqVsLcsJ333xDvUwm9pAY8OYjtvA7j-RZ8upCW99B7ZkWaAWxfygMPIkN5qt57M6TGYA8jTA48PKFu5cNhxk7gFc3WKm5yOg7A4_PgpzUQNc5' }}
+                    source={{ uri: profile.avatar }}
                     style={styles.avatar}
                   />
                   <TouchableOpacity style={styles.editAvatarButton}>
@@ -55,8 +179,8 @@ export default function Profile() {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.userInfo}>
-                  <Text style={styles.userName}>Amelia-Rose</Text>
-                  <Text style={styles.userEmail}>amelia.rose@email.com</Text>
+                  <Text style={styles.userName}>{profile.name}</Text>
+                  <Text style={styles.userEmail}>{profile.email}</Text>
                 </View>
               </View>
               <TouchableOpacity style={styles.editProfileButton}>
@@ -81,7 +205,9 @@ export default function Profile() {
                 <Text style={styles.settingLabel}>Dietary Restrictions</Text>
               </View>
               <View style={styles.settingRight}>
-                <Text style={styles.settingValue}>Vegan</Text>
+                <Text style={styles.settingValue}>
+                  {profile.dietaryRestrictions.join(', ') || 'None'}
+                </Text>
                 <Text style={styles.arrowIcon}>›</Text>
               </View>
             </View>
@@ -89,47 +215,96 @@ export default function Profile() {
             {/* Allergies Input */}
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Allergies</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="e.g. Peanuts, Shellfish"
-                placeholderTextColor={Colors.textMuted}
-              />
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={[styles.textInput, styles.inputExpanded]}
+                  placeholder="e.g. Peanuts, Shellfish"
+                  placeholderTextColor={Colors.textMuted}
+                  value={allergyInput}
+                  onChangeText={setAllergyInput}
+                  onSubmitEditing={handleAddAllergy}
+                />
+                <TouchableOpacity style={styles.addButton} onPress={handleAddAllergy}>
+                  <Text style={styles.addButtonText}>+</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             {/* Allergy Tags */}
             <View style={styles.tagsContainer}>
-              <View style={styles.tag}>
-                <Text style={styles.tagText}>Peanuts</Text>
-                <TouchableOpacity style={styles.tagClose}>
-                  <Text style={styles.tagCloseText}>×</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.tag}>
-                <Text style={styles.tagText}>Shellfish</Text>
-                <TouchableOpacity style={styles.tagClose}>
-                  <Text style={styles.tagCloseText}>×</Text>
-                </TouchableOpacity>
-              </View>
+              {profile.allergies.map((allergy, index) => (
+                <View key={index} style={styles.tag}>
+                  <Text style={styles.tagText}>{allergy}</Text>
+                  <TouchableOpacity 
+                    style={styles.tagClose}
+                    onPress={() => handleRemoveAllergy(allergy)}
+                  >
+                    <Text style={styles.tagCloseText}>×</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
             </View>
 
             {/* Liked Ingredients Input */}
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Liked Ingredients</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="e.g. Avocado, Salmon"
-                placeholderTextColor={Colors.textMuted}
-              />
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={[styles.textInput, styles.inputExpanded]}
+                  placeholder="e.g. Avocado, Salmon"
+                  placeholderTextColor={Colors.textMuted}
+                  value={likedInput}
+                  onChangeText={setLikedInput}
+                  onSubmitEditing={handleAddLiked}
+                />
+                <TouchableOpacity style={styles.addButton} onPress={handleAddLiked}>
+                  <Text style={styles.addButtonText}>+</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.tagsContainer}>
+                {profile.likedIngredients.map((ingredient, index) => (
+                  <View key={index} style={styles.tag}>
+                    <Text style={styles.tagText}>{ingredient}</Text>
+                    <TouchableOpacity 
+                      style={styles.tagClose}
+                      onPress={() => handleRemoveLiked(ingredient)}
+                    >
+                      <Text style={styles.tagCloseText}>×</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
             </View>
 
             {/* Disliked Ingredients Input */}
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Disliked Ingredients</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="e.g. Olives, Cilantro"
-                placeholderTextColor={Colors.textMuted}
-              />
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={[styles.textInput, styles.inputExpanded]}
+                  placeholder="e.g. Olives, Cilantro"
+                  placeholderTextColor={Colors.textMuted}
+                  value={dislikedInput}
+                  onChangeText={setDislikedInput}
+                  onSubmitEditing={handleAddDisliked}
+                />
+                <TouchableOpacity style={styles.addButton} onPress={handleAddDisliked}>
+                  <Text style={styles.addButtonText}>+</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.tagsContainer}>
+                {profile.dislikedIngredients.map((ingredient, index) => (
+                  <View key={index} style={styles.tag}>
+                    <Text style={styles.tagText}>{ingredient}</Text>
+                    <TouchableOpacity 
+                      style={styles.tagClose}
+                      onPress={() => handleRemoveDisliked(ingredient)}
+                    >
+                      <Text style={styles.tagCloseText}>×</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
             </View>
           </View>
 
@@ -143,8 +318,8 @@ export default function Profile() {
             <View style={styles.toggleRow}>
               <Text style={styles.toggleLabel}>Include Breakfast</Text>
               <Switch
-                value={includeBreakfast}
-                onValueChange={setIncludeBreakfast}
+                value={profile.includeBreakfast}
+                onValueChange={(value) => updateProfile({ includeBreakfast: value })}
                 trackColor={{ false: Colors.textGray, true: Colors.primary }}
                 thumbColor={Colors.textLight}
               />
@@ -153,8 +328,8 @@ export default function Profile() {
             <View style={styles.toggleRow}>
               <Text style={styles.toggleLabel}>Include Lunch</Text>
               <Switch
-                value={includeLunch}
-                onValueChange={setIncludeLunch}
+                value={profile.includeLunch}
+                onValueChange={(value) => updateProfile({ includeLunch: value })}
                 trackColor={{ false: Colors.textGray, true: Colors.primary }}
                 thumbColor={Colors.textLight}
               />
@@ -163,8 +338,8 @@ export default function Profile() {
             <View style={styles.toggleRow}>
               <Text style={styles.toggleLabel}>Include Dinner</Text>
               <Switch
-                value={includeDinner}
-                onValueChange={setIncludeDinner}
+                value={profile.includeDinner}
+                onValueChange={(value) => updateProfile({ includeDinner: value })}
                 trackColor={{ false: Colors.textGray, true: Colors.primary }}
                 thumbColor={Colors.textLight}
               />
@@ -173,8 +348,8 @@ export default function Profile() {
             <View style={styles.toggleRow}>
               <Text style={styles.toggleLabel}>Include Snacks</Text>
               <Switch
-                value={includeSnacks}
-                onValueChange={setIncludeSnacks}
+                value={profile.includeSnacks}
+                onValueChange={(value) => updateProfile({ includeSnacks: value })}
                 trackColor={{ false: Colors.textGray, true: Colors.primary }}
                 thumbColor={Colors.textLight}
               />
@@ -186,14 +361,14 @@ export default function Profile() {
               <View style={styles.counter}>
                 <TouchableOpacity 
                   style={styles.counterButton}
-                  onPress={() => setServings(Math.max(1, servings - 1))}
+                  onPress={() => updateProfile({ servingsPerMeal: Math.max(1, profile.servingsPerMeal - 1) })}
                 >
                   <Text style={styles.counterText}>-</Text>
                 </TouchableOpacity>
-                <Text style={styles.servingsText}>{servings}</Text>
+                <Text style={styles.servingsText}>{profile.servingsPerMeal}</Text>
                 <TouchableOpacity 
                   style={styles.counterButton}
-                  onPress={() => setServings(servings + 1)}
+                  onPress={() => updateProfile({ servingsPerMeal: profile.servingsPerMeal + 1 })}
                 >
                   <Text style={styles.counterText}>+</Text>
                 </TouchableOpacity>
@@ -211,24 +386,37 @@ export default function Profile() {
             <View style={styles.toggleRow}>
               <Text style={styles.toggleLabel}>Push Notifications</Text>
               <Switch
-                value={pushNotifications}
-                onValueChange={setPushNotifications}
+                value={profile.pushNotifications}
+                onValueChange={(value) => updateProfile({ pushNotifications: value })}
                 trackColor={{ false: Colors.textGray, true: Colors.primary }}
                 thumbColor={Colors.textLight}
               />
             </View>
 
-            <View style={styles.settingRow}>
+            <TouchableOpacity 
+              style={styles.settingRow}
+              onPress={() => updateProfile({ unitsOfMeasurement: profile.unitsOfMeasurement === 'metric' ? 'imperial' : 'metric' })}
+            >
               <Text style={styles.settingLabel}>Units of Measurement</Text>
               <View style={styles.settingRight}>
-                <Text style={styles.settingValue}>Metric</Text>
+                <Text style={styles.settingValue}>
+                  {profile.unitsOfMeasurement === 'metric' ? 'Metric' : 'Imperial'}
+                </Text>
                 <Text style={styles.arrowIcon}>›</Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
 
           {/* Bottom Spacing */}
           <View style={styles.bottomSpacing} />
+          
+          {/* Saving Indicator */}
+          {saving && (
+            <View style={styles.savingIndicator}>
+              <ActivityIndicator size="small" color={Colors.primary} />
+              <Text style={styles.savingText}>Saving...</Text>
+            </View>
+          )}
         </ScrollView>
       </View>
     </View>
@@ -559,5 +747,75 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     paddingBottom: 100, // Footer height + extra spacing
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  loadingText: {
+    color: Colors.textDark,
+    fontSize: 16,
+    marginTop: 16,
+  },
+
+  errorText: {
+    color: Colors.error,
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+
+  retryButton: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+
+  retryButtonText: {
+    color: Colors.textLight,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+
+  inputExpanded: {
+    flex: 1,
+  },
+
+  addButton: {
+    width: 56,
+    height: 56,
+    backgroundColor: Colors.primary,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  addButtonText: {
+    color: Colors.textLight,
+    fontSize: 24,
+    fontWeight: '500',
+  },
+
+  savingIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    gap: 8,
+  },
+
+  savingText: {
+    color: Colors.textMuted,
+    fontSize: 14,
   },
 });

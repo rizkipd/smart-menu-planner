@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,29 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
-import { Typography } from '../../constants/typography';
-import { Spacing } from '../../constants/spacing';
+import MobileApiService, { MealPlan, PlanMode } from '../../services/api';
 
-// Sample weekly menu data from template
-const weeklyMenuData = [
+// Interface for the meal data structure we'll display
+interface MealItem {
+  id: number;
+  title: string;
+  mealType: string;
+  description: string;
+  ingredients: string;
+  image: string;
+}
+
+interface DayMealData {
+  day: string;
+  meals: MealItem[];
+}
+
+// Sample weekly menu data as fallback (will be replaced with API data)
+const fallbackWeeklyMenuData: DayMealData[] = [
   {
     day: 'Monday',
     meals: [
@@ -76,20 +91,179 @@ const weeklyMenuData = [
 ];
 
 export default function Plans() {
+  // State management
+  const [weeklyMenuData, setWeeklyMenuData] = useState<DayMealData[]>(fallbackWeeklyMenuData);
+  const [loading, setLoading] = useState(false);
+  const [, setPlanModes] = useState<PlanMode[]>([]);
+  const [, setCurrentPlanId] = useState<number | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  // Load available plan modes on component mount
+  useEffect(() => {
+    loadPlanModes();
+    // Try to load existing plans (you can expand this to show recent plans)
+    loadRecentPlans();
+  }, []);
+
+  const loadPlanModes = async () => {
+    try {
+      const response = await MobileApiService.getPlanModes();
+      if (response.success && response.data) {
+        setPlanModes(response.data.modes);
+      }
+    } catch (error) {
+      console.error('Failed to load plan modes:', error);
+    }
+  };
+
+  const loadRecentPlans = async () => {
+    // For now, we'll load popular plans as example data
+    try {
+      setLoading(true);
+      const response = await MobileApiService.getPopularPlans('diet', 5);
+      if (response.success && response.data) {
+        // For demo purposes, we'll keep the fallback data
+        // In a full implementation, you'd transform the API data to match your UI structure
+        console.log('Popular plans loaded:', response.data.popular_plans);
+      }
+    } catch (error) {
+      console.error('Failed to load recent plans:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleBack = () => {
     console.log('Back pressed');
   };
 
-  const handleBrowseRecipes = () => {
-    console.log('Browse Recipes pressed');
+  const handleBrowseRecipes = async () => {
+    try {
+      setLoading(true);
+      const response = await MobileApiService.getPopularPlans('satisfaction', 10);
+      if (response.success && response.data) {
+        Alert.alert(
+          'Browse Recipes',
+          `Found ${response.data.popular_plans.length} popular recipes!`,
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to browse recipes. Please check your connection.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGenerateNew = () => {
-    console.log('Generate New pressed');
+  const handleGenerateNew = async () => {
+    try {
+      setIsGenerating(true);
+      
+      // Generate a new meal plan using AI
+      const generateRequest = {
+        mode: 'diet', // Default mode, you can make this selectable
+        preferences: {
+          dietary_restrictions: ['vegetarian'],
+          servings: 2,
+        }
+      };
+
+      const response = await MobileApiService.generateMealPlan(generateRequest);
+      
+      if (response.success && response.data) {
+        setCurrentPlanId(response.data.id);
+        
+        // Transform API data to match our UI structure
+        const transformedData = transformApiDataToUI(response.data);
+        setWeeklyMenuData(transformedData);
+        
+        Alert.alert(
+          'Success!',
+          'New meal plan generated successfully!',
+          [{ text: 'OK' }]
+        );
+      } else {
+        throw new Error(response.message || 'Generation failed');
+      }
+    } catch (error) {
+      Alert.alert(
+        'Generation Failed',
+        'Failed to generate new meal plan. Please try again.',
+        [{ text: 'OK' }]
+      );
+      console.error('Generation error:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const transformApiDataToUI = (planData: MealPlan): DayMealData[] => {
+    // Transform the API meal plan data to match our UI structure
+    if (!planData.weekly_plan || planData.weekly_plan.length === 0) {
+      return fallbackWeeklyMenuData;
+    }
+
+    return planData.weekly_plan.map((dayPlan, index) => {
+      const meals: MealItem[] = [];
+      let mealId = index * 10; // Generate unique IDs
+
+      if (dayPlan.breakfast) {
+        meals.push({
+          id: mealId++,
+          title: dayPlan.breakfast,
+          mealType: 'Breakfast',
+          description: 'AI-generated healthy breakfast option',
+          ingredients: 'Fresh ingredients as specified in recipe',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDIyN4C4neKWgZwHxY0C9G63qCsKhPzaSDSIZqn1CCeOXYAZawiwyWu3GzWn6AxZ5yogHB5XxWj6QnxMResKqmdm0YKgzQRmhdPG4FSCxYWe3kP36qh4KHNLssccEF-O-hGB_9QwYdehXD-j3C-zrxZkBUeg-qkgxF5DE5IpyoF4rfvYrhz3ZI7C_LgR2N9AdaPKFuhufNzTN8r8A8WNgbJer9kORgz46d9IzjkD-duj3LjIkNR05xiM4tmoB8M6va79Gt1yLxIKuWx'
+        });
+      }
+
+      if (dayPlan.lunch) {
+        meals.push({
+          id: mealId++,
+          title: dayPlan.lunch,
+          mealType: 'Lunch',
+          description: 'AI-generated nutritious lunch',
+          ingredients: 'Fresh ingredients as specified in recipe',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDNmuvZco8ev-noSac-L6ZkDfTNgCpAn1qNSOJfb-wDPPkRpOjbj4BKqn9sbakCYo8ajG7ifNGvmWVlCo4ZvYPgldBkc3LVDID1A5IV7qSxSgdCLQTgm9coODWR2TeO_dcMlldHy73I9tgGuf2qmbeoz0deuzl1U0LAMz6mzk9rJaMC-CIrbMwQfNSv-49UJEpfPQnDju_1IUr2Z2pqF9F4oHtC4ubx1nmzuEqowC4eXVwD5_Xg6V58pXgM4u2vJiLm8H60uaqukLjG'
+        });
+      }
+
+      if (dayPlan.dinner) {
+        meals.push({
+          id: mealId++,
+          title: dayPlan.dinner,
+          mealType: 'Dinner',
+          description: 'AI-generated delicious dinner',
+          ingredients: 'Fresh ingredients as specified in recipe',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB2eVGaWbte2gFS_pBWSR6fz5avyekicVb6K5brRzW4L0-uiK-3E5p3fQX2eHPfXTH55ZHquAuxjxa4jovhcXYVQuvmHth5Vt2XSSDWQatGJ0E_oTjyIrGtf7PhSntCrxR3j6U9ZprQNMj8iO4X8si1RVQCD2eDi0tCHQjLO26BnNy2BvhASZgGwHL5AIqYkRiO75o07b4UF8_vN27bKVDO6Zm3Chryo3i92g5ftIM4x9bZs34fZzIFkur75VHpvJz8ckkkWojeY_l3'
+        });
+      }
+
+      if (dayPlan.snacks) {
+        meals.push({
+          id: mealId++,
+          title: dayPlan.snacks,
+          mealType: 'Snacks',
+          description: 'AI-generated healthy snacks',
+          ingredients: 'Fresh ingredients as specified in recipe',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAvHPEyHbXMYRPNfYCEHt8P_08oU6cxYE5jGXEH0YwzyFFHdBslrH1miyP5zZldoxPo6yYc7XRvOZBmP_SAOh7yXSUR77M5sWsDb0knV8m2oNZ-980AqkQVzxC5dZwL6OLw2xYPEQBC5_AEOw05Eb1VZv-TVnjqMogZTdU294DCdBim8rXp8GpLg6Td4rFy7eBMEK0tV1GN9U5jCTElezYFxJcOvxfTr9g5dU_rhXuNtgKbXPUXXqAhWWqkkqV-KGivKHtJ8cGmsFP0'
+        });
+      }
+
+      return {
+        day: dayPlan.day,
+        meals: meals
+      };
+    });
   };
 
   const handleQuickViewRecipe = (mealId: number) => {
-    console.log('Quick View Recipe:', mealId);
+    Alert.alert(
+      'Recipe Details',
+      'Recipe view functionality will be implemented in the next phase. For now, this shows the meal ID: ' + mealId,
+      [{ text: 'OK' }]
+    );
   };
 
   return (
@@ -109,11 +283,27 @@ export default function Plans() {
         {/* Action Buttons - template: flex justify-stretch px-4 py-3 */}
         <View style={styles.actionSection}>
           <View style={styles.actionContainer}>
-            <TouchableOpacity style={styles.browseButton} onPress={handleBrowseRecipes}>
-              <Text style={styles.browseButtonText}>Browse Recipes</Text>
+            <TouchableOpacity 
+              style={[styles.browseButton, loading && styles.buttonDisabled]} 
+              onPress={handleBrowseRecipes}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color={Colors.textDark} />
+              ) : (
+                <Text style={styles.browseButtonText}>Browse Recipes</Text>
+              )}
             </TouchableOpacity>
-            <TouchableOpacity style={styles.generateButton} onPress={handleGenerateNew}>
-              <Text style={styles.generateButtonText}>Generate New</Text>
+            <TouchableOpacity 
+              style={[styles.generateButton, isGenerating && styles.buttonDisabled]} 
+              onPress={handleGenerateNew}
+              disabled={isGenerating}
+            >
+              {isGenerating ? (
+                <ActivityIndicator size="small" color={Colors.backgroundDark} />
+              ) : (
+                <Text style={styles.generateButtonText}>Generate New</Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -344,5 +534,10 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     paddingBottom: 100, // Footer height + extra spacing
+  },
+
+  // Button disabled state
+  buttonDisabled: {
+    opacity: 0.6,
   },
 });

@@ -13,10 +13,16 @@ export default function Index() {
     router.push('/(tabs)');
   };
 
+  const handleSignUp = () => {
+    // TODO: Implement sign up flow
+    console.log('Sign up pressed');
+  };
+
   return (
     <LoginScreen 
       onLogin={handleLogin}
       onQuickDemo={handleQuickDemo}
+      onSignUp={handleSignUp}
     />
   );
 }

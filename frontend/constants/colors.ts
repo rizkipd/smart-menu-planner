@@ -57,11 +57,11 @@ export const Colors = {
   
   // Gradient definitions - template gradients
   gradients: {
-    primary: ['#38e07b', '#4CAF50'],
-    health: ['#4CAF50', '#45a049'],     // Diet & Health card
-    delicious: ['#FF6B6B', '#FF8E53'],  // Taste & Satisfaction card  
-    economic: ['#4ECDC4', '#44A08D'],   // Budget Friendly card
-    splash: ['rgba(246, 248, 247, 0.5)', 'transparent'], // Splash overlay
+    primary: ['#38e07b', '#4CAF50'] as string[],
+    health: ['#4CAF50', '#45a049'] as string[],     // Diet & Health card
+    delicious: ['#FF6B6B', '#FF8E53'] as string[],  // Taste & Satisfaction card  
+    economic: ['#4ECDC4', '#44A08D'] as string[],   // Budget Friendly card
+    splash: ['rgba(246, 248, 247, 0.5)', 'transparent'] as string[], // Splash overlay
   }
 } as const;
 
