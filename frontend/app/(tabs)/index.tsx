@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../../constants/colors';
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
   
   header: {
     backgroundColor: Colors.backgroundDark,
-    paddingTop: 50,
+    paddingTop: Platform.OS === 'ios' ? 65 : 25, // Platform-specific status bar spacing
     paddingBottom: Spacing.lg,
     paddingHorizontal: Spacing.lg,
   },

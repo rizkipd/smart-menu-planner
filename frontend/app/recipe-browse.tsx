@@ -17,22 +17,7 @@ import { Spacing } from '../constants/spacing';
 
 const { width } = Dimensions.get('window');
 
-// Responsive breakpoints
-const isSmallScreen = width < 375;
-const isMediumScreen = width >= 375 && width < 414;
-const isLargeScreen = width >= 414;
-
-const getResponsiveSpacing = (small: number, medium: number, large: number) => {
-  if (isSmallScreen) return small;
-  if (isMediumScreen) return medium;
-  return large;
-};
-
-const getResponsiveFontSize = (small: number, medium: number, large: number) => {
-  if (isSmallScreen) return small;
-  if (isMediumScreen) return medium;
-  return large;
-};
+// Removed custom responsive functions - using standard Spacing constants instead
 
 export default function RecipeBrowse() {
   const router = useRouter();

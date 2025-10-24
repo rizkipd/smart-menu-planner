@@ -24,24 +24,7 @@ interface LoginScreenProps {
 
 const { width, height } = Dimensions.get('window');
 
-// Responsive breakpoints
-const isSmallScreen = width < 375; // iPhone SE
-const isMediumScreen = width >= 375 && width < 414; // iPhone 12/13
-const isLargeScreen = width >= 414; // iPhone Plus/Max and larger
-
-// Responsive spacing function
-const getResponsiveSpacing = (small: number, medium: number, large: number) => {
-  if (isSmallScreen) return small;
-  if (isMediumScreen) return medium;
-  return large;
-};
-
-// Responsive font size function
-const getResponsiveFontSize = (small: number, medium: number, large: number) => {
-  if (isSmallScreen) return small;
-  if (isMediumScreen) return medium;
-  return large;
-};
+// Removed custom responsive functions - using standard Spacing constants instead
 
 export default function LoginScreen({ onLogin, onQuickDemo, onSignUp }: LoginScreenProps) {
   // Form state
@@ -295,7 +278,7 @@ const styles = StyleSheet.create({
     minHeight: height,
     width: '100%',
     backgroundColor: Colors.backgroundDark,
-    padding: getResponsiveSpacing(8, 8, 12), // Reduced padding for wider elements
+    padding: Spacing.sm, // Standard padding
   },
   
   // Flex grow container - template: flex-grow flex-col justify-center items-center
@@ -323,12 +306,12 @@ const styles = StyleSheet.create({
   logoContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: getResponsiveSpacing(20, 24, 32), // Responsive mb: small-20px, medium-24px, large-32px
+    marginBottom: Spacing.xxl, // Standard large margin
   },
   
   svgLogo: {
-    width: getResponsiveSpacing(36, 42, 48), // Responsive icon size
-    height: getResponsiveSpacing(36, 42, 48),
+    width: Spacing.widths.iconHeader, // Standard icon size
+    height: Spacing.widths.iconHeader,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -336,24 +319,24 @@ const styles = StyleSheet.create({
   // Welcome title - template: text-white text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6 (responsive)
   welcomeTitle: {
     color: Colors.textDark,
-    fontSize: getResponsiveFontSize(24, 28, 32), // Responsive font: small-24px, medium-28px, large-32px
+    fontSize: Typography.fontSize['2xl'], // Standard large font
     fontWeight: Typography.fontWeight.bold,
     lineHeight: Typography.textStyles.loginTitle.lineHeight,
-    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
+    paddingHorizontal: Spacing.lg, // Standard padding
     textAlign: 'center',
-    paddingBottom: getResponsiveSpacing(8, 10, 12), // Responsive pb
-    paddingTop: getResponsiveSpacing(16, 20, 24), // Responsive pt
+    paddingBottom: Spacing.md, // Standard padding
+    paddingTop: Spacing.lg, // Standard padding
     fontFamily: Typography.fontFamily.display,
   },
   
   // Subtitle - template: text-gray-400 text-base font-normal leading-normal pb-6 px-4 text-center (responsive)
   subtitle: {
     color: Colors.textGrayDark,
-    fontSize: getResponsiveFontSize(14, 15, 16), // Responsive font: small-14px, medium-15px, large-16px
+    fontSize: Typography.fontSize.base, // Standard font size
     fontWeight: Typography.fontWeight.normal,
     lineHeight: Typography.textStyles.bodyText.lineHeight,
-    paddingBottom: getResponsiveSpacing(16, 20, 24), // Responsive pb: small-16px, medium-20px, large-24px
-    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
+    paddingBottom: Spacing.xl, // Standard padding
+    paddingHorizontal: Spacing.lg, // Standard padding
     textAlign: 'center',
     fontFamily: Typography.fontFamily.body,
   },
@@ -361,9 +344,9 @@ const styles = StyleSheet.create({
   // Form container - template: flex-col gap-4 px-4 py-3 (responsive)
   formContainer: {
     flexDirection: 'column',
-    gap: getResponsiveSpacing(12, 14, 16), // Responsive gap: small-12px, medium-14px, large-16px
-    paddingHorizontal: getResponsiveSpacing(4, 8, 12), // Reduced horizontal padding for wider elements
-    paddingVertical: getResponsiveSpacing(8, 10, 12), // Responsive py
+    gap: Spacing.lg, // Standard gap
+    paddingHorizontal: Spacing.sm, // Standard padding
+    paddingVertical: Spacing.md, // Standard padding
   },
   
   // Field container - template: flex-col min-w-40 (responsive)
@@ -371,26 +354,26 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: '100%', // Full width
     maxWidth: 800, // Even wider max width
-    marginBottom: getResponsiveSpacing(2, 3, 4), // Small margin between fields
+    marginBottom: Spacing.xs, // Small margin between fields
   },
   
   // Field label - template: text-white text-base font-medium leading-normal pb-2 (responsive)
   fieldLabel: {
     color: Colors.textDark,
-    fontSize: getResponsiveFontSize(14, 15, 16), // Responsive font: small-14px, medium-15px, large-16px
+    fontSize: Typography.fontSize.base, // Standard font size
     fontWeight: Typography.fontWeight.medium,
     lineHeight: Typography.textStyles.bodyText.lineHeight,
-    paddingBottom: getResponsiveSpacing(6, 7, 8), // Responsive pb: small-6px, medium-7px, large-8px
+    paddingBottom: Spacing.sm, // Standard padding
     fontFamily: Typography.fontFamily.body,
   },
   
   // Text input - template: h-14 bg-[#29382f] rounded-xl p-4 text-white text-base font-normal leading-normal (responsive)
   textInput: {
-    height: getResponsiveSpacing(44, 48, 52), // Fixed height: small-44px, medium-48px, large-52px
+    height: Spacing.heights.input, // Standard input height
     backgroundColor: Colors.cardSecondary, // #29382f
-    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
-    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
-    paddingVertical: getResponsiveSpacing(10, 12, 14), // Responsive py
+    borderRadius: Spacing.borderRadius.lg, // Standard border radius
+    paddingHorizontal: Spacing.lg, // Standard padding
+    paddingVertical: Spacing.md, // Standard padding
     color: Colors.textDark,
     fontSize: 18, // Increased to 18px
     fontWeight: Typography.fontWeight.normal,
@@ -404,19 +387,19 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'stretch',
     backgroundColor: Colors.cardSecondary,
-    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
+    borderRadius: Spacing.borderRadius.lg, // Standard border radius
   },
   
   // Password input (responsive)
   passwordInput: {
     flex: 1,
-    minHeight: getResponsiveSpacing(44, 48, 52), // Responsive h: small-44px, medium-48px, large-52px
+    minHeight: Spacing.heights.input, // Standard input height
     backgroundColor: 'transparent',
-    borderTopLeftRadius: getResponsiveSpacing(10, 12, 14),
-    borderBottomLeftRadius: getResponsiveSpacing(10, 12, 14),
-    paddingHorizontal: getResponsiveSpacing(12, 16, 20), // Responsive px
-    paddingVertical: getResponsiveSpacing(10, 12, 14), // Responsive py
-    paddingRight: getResponsiveSpacing(6, 8, 10), // Responsive pr
+    borderTopLeftRadius: Spacing.borderRadius.lg,
+    borderBottomLeftRadius: Spacing.borderRadius.lg,
+    paddingHorizontal: Spacing.lg, // Standard padding
+    paddingVertical: Spacing.md, // Standard padding
+    paddingRight: Spacing.sm, // Standard padding
     color: Colors.textDark,
     fontSize: 18, // Increased to 18px
     fontWeight: Typography.fontWeight.normal,
@@ -428,9 +411,9 @@ const styles = StyleSheet.create({
   visibilityToggle: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingRight: getResponsiveSpacing(12, 16, 20), // Responsive pr
-    borderTopRightRadius: getResponsiveSpacing(10, 12, 14),
-    borderBottomRightRadius: getResponsiveSpacing(10, 12, 14),
+    paddingRight: Spacing.lg, // Standard padding
+    borderTopRightRadius: Spacing.borderRadius.lg,
+    borderBottomRightRadius: Spacing.borderRadius.lg,
   },
   
   // Input error styling
@@ -477,11 +460,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
-    height: getResponsiveSpacing(40, 44, 48), // Original height: small-40px, medium-44px, large-48px
-    paddingHorizontal: getResponsiveSpacing(16, 18, 20), // Responsive px
+    borderRadius: Spacing.borderRadius.lg, // Standard border radius
+    height: Spacing.heights.button, // Standard button height
+    paddingHorizontal: Spacing.lg, // Standard padding
     backgroundColor: Colors.primary,
-    marginBottom: getResponsiveSpacing(8, 10, 12), // Responsive mb
+    marginBottom: Spacing.md, // Standard margin
   },
   
   // Login button text - template: text-[#111714] text-base font-bold leading-normal tracking-[0.015em] (responsive)
@@ -502,9 +485,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
-    height: getResponsiveSpacing(40, 44, 48), // Original height: small-40px, medium-44px, large-48px
-    paddingHorizontal: getResponsiveSpacing(16, 18, 20), // Responsive px
+    borderRadius: Spacing.borderRadius.lg, // Standard border radius
+    height: Spacing.heights.button, // Standard button height
+    paddingHorizontal: Spacing.lg, // Standard padding
     backgroundColor: 'rgba(102, 126, 234, 0.2)',
     borderWidth: 1,
     borderColor: 'rgba(102, 126, 234, 0.4)',
@@ -551,9 +534,9 @@ const styles = StyleSheet.create({
   // Social buttons container - template: flex-col gap-4 px-4 py-3 (responsive)
   socialButtonsContainer: {
     flexDirection: 'column',
-    gap: getResponsiveSpacing(12, 14, 16), // Responsive gap: small-12px, medium-14px, large-16px
-    paddingHorizontal: getResponsiveSpacing(4, 8, 12), // Reduced horizontal padding for wider buttons
-    paddingVertical: getResponsiveSpacing(8, 10, 12), // Responsive py
+    gap: Spacing.lg, // Standard gap
+    paddingHorizontal: Spacing.sm, // Standard padding
+    paddingVertical: Spacing.md, // Standard padding
   },
   
   // Social button - template: bg-[#29382f] h-12 rounded-xl px-5 (responsive)
@@ -564,17 +547,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
-    borderRadius: getResponsiveSpacing(10, 12, 14), // Responsive border radius
-    height: getResponsiveSpacing(40, 44, 48), // Original height: small-40px, medium-44px, large-48px
-    paddingHorizontal: getResponsiveSpacing(16, 18, 20), // Responsive px
+    borderRadius: Spacing.borderRadius.lg, // Standard border radius
+    height: Spacing.heights.button, // Standard button height
+    paddingHorizontal: Spacing.lg, // Standard padding
     backgroundColor: Colors.cardSecondary, // #29382f
   },
   
   // Social icon - template: w-6 h-6 mr-3 (responsive)
   socialIcon: {
-    width: getResponsiveSpacing(18, 21, 24), // Responsive w: small-18px, medium-21px, large-24px
-    height: getResponsiveSpacing(18, 21, 24), // Responsive h: small-18px, medium-21px, large-24px
-    marginRight: getResponsiveSpacing(10, 12, 14), // Responsive mr: small-10px, medium-12px, large-14px
+    width: Spacing.widths.icon, // Standard icon width
+    height: Spacing.widths.icon, // Standard icon height
+    marginRight: Spacing.md, // Standard margin
   },
   
   // Apple icon container

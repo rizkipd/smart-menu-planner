@@ -9,8 +9,10 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  Platform,
 } from 'react-native';
 import { Colors } from '../../constants/colors';
+import { Spacing } from '../../constants/spacing';
 import MobileApiService, { MealPlan, PlanMode } from '../../services/api';
 
 // Interface for the meal data structure we'll display
@@ -367,22 +369,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.backgroundDark,
-    paddingTop: 50, // Mobile status bar spacing
-    padding: 16,
-    paddingBottom: 8,
+    paddingTop: Platform.OS === 'ios' ? 65 : 25, // Platform-specific status bar spacing
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.sm,
     justifyContent: 'space-between',
   },
   
   backButton: {
-    width: 48,
-    height: 48,
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: Colors.cardDark,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   backIcon: {
     color: Colors.textDark,
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   
@@ -400,13 +405,13 @@ const styles = StyleSheet.create({
   
   // Action Section - template: flex justify-stretch px-4 py-3
   actionSection: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
   },
 
   actionContainer: {
     flexDirection: 'row',
-    gap: 12,
+    gap: Spacing.md,
   },
 
   // Browse Button - template: bg-zinc-200 dark:bg-[#29382f] text-black dark:text-white
@@ -414,12 +419,12 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 84,
     maxWidth: 480,
-    height: 48,
+    height: Spacing.heights.button,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
+    borderRadius: Spacing.borderRadius.lg,
     backgroundColor: '#29382f',
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.padding.lg,
   },
 
   browseButtonText: {
@@ -433,12 +438,12 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 84,
     maxWidth: 480,
-    height: 48,
+    height: Spacing.heights.button,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
+    borderRadius: Spacing.borderRadius.lg,
     backgroundColor: Colors.primary,
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.padding.lg,
   },
 
   generateButtonText: {
@@ -449,13 +454,13 @@ const styles = StyleSheet.create({
   
   content: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.lg,
   },
   
   // Day Section
   daySection: {
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
 
   // Day Title - template: text-black dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] py-4
@@ -463,35 +468,35 @@ const styles = StyleSheet.create({
     color: Colors.textDark,
     fontSize: 18,
     fontWeight: '700',
-    paddingVertical: 16,
+    paddingVertical: Spacing.lg,
   },
 
   // Meals Container - template: space-y-4
   mealsContainer: {
-    gap: 16,
+    gap: Spacing.lg,
   },
 
   // Meal Card - template: flex flex-col gap-4 rounded-xl bg-zinc-100 dark:bg-[#19241c] p-4
   mealCard: {
     flexDirection: 'column',
-    gap: 16,
-    borderRadius: 12,
+    gap: Spacing.lg,
+    borderRadius: Spacing.borderRadius.lg,
     backgroundColor: '#19241c',
-    padding: 16,
+    padding: Spacing.lg,
   },
 
   // Meal Image - template: w-full h-48 bg-center bg-no-repeat aspect-square bg-cover rounded-xl
   mealImage: {
     width: '100%',
-    height: 192, // h-48 = 12rem = 192px
-    borderRadius: 12,
+    height: Spacing.heights.card, // h-48 = 192px
+    borderRadius: Spacing.borderRadius.lg,
     backgroundColor: Colors.cardSecondary,
   },
 
   // Meal Info - template: flex flex-col gap-1 flex-1
   mealInfo: {
     flexDirection: 'column',
-    gap: 4,
+    gap: Spacing.xs,
     flex: 1,
   },
 
@@ -520,9 +525,9 @@ const styles = StyleSheet.create({
   quickViewButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
-    height: 48,
-    paddingHorizontal: 20,
+    borderRadius: Spacing.borderRadius.lg,
+    height: Spacing.heights.button,
+    paddingHorizontal: Spacing.padding.lg,
     backgroundColor: Colors.primary,
   },
 

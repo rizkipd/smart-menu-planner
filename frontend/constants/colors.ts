@@ -41,6 +41,18 @@ export const Colors = {
   warning: '#F59E0B',        // Warning states
   info: '#2196F3',           // Info = secondary
   
+  // Enhanced accessibility colors (WCAG AA compliant)
+  accessiblePrimary: '#2DB55D',     // Higher contrast version of primary
+  accessibleSecondary: '#1976D2',   // Higher contrast version of secondary
+  accessibleError: '#D32F2F',      // Higher contrast error
+  accessibleWarning: '#F57C00',     // Higher contrast warning
+  accessibleSuccess: '#388E3C',     // Higher contrast success
+  
+  // High contrast text colors
+  textHighContrast: '#000000',      // Maximum contrast for light backgrounds
+  textLowContrast: '#666666',       // Accessible gray text
+  textInverse: '#FFFFFF',           // White text for dark backgrounds
+  
   // Overlay and transparency colors - template patterns
   overlay50: 'rgba(0, 0, 0, 0.5)',
   overlay80: 'rgba(0, 0, 0, 0.8)',

@@ -1,35 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   StatusBar,
   ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  Dimensions,
-  ActivityIndicator,
   Alert,
+  Dimensions,
 } from 'react-native';
 import { Colors } from '../../constants/colors';
 import { Spacing } from '../../constants/spacing';
 import { useRouter } from 'expo-router';
 import MobileApiService from '../../services/api';
+import {
+  FavoritesHeader,
+  FavoritesSearchBar,
+  FavoritesFilters,
+  FavoritesGrid,
+  FavoritesLoadingState,
+  FavoritePlan,
+} from '../../components/favorites';
 
 const { width } = Dimensions.get('window');
-
-// Extended interface for favorite plans with UI properties
-interface FavoritePlan {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  mode: string;
-  created_at: string;
-  preview?: string;
-}
 
 // Available plan modes for filtering
 const filterChips = [
@@ -289,108 +280,34 @@ export default function Favorites() {
       <StatusBar barStyle="light-content" backgroundColor={Colors.backgroundDark} />
       
       <View style={styles.designRoot}>
-        {/* Top App Bar - template: flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Text style={styles.backIcon}>←</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>My Favorites</Text>
-          <TouchableOpacity style={styles.sortButton} onPress={handleSort}>
-            <Text style={styles.sortIcon}>⇅</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Search Bar - template: px-4 py-3 */}
-        <View style={styles.searchSection}>
-          <View style={styles.searchContainer}>
-            <View style={styles.searchIcon}>
-              <Text style={styles.searchIconText}>🔍</Text>
-            </View>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search my favorites..."
-              placeholderTextColor={Colors.textMuted}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-            />
-          </View>
-        </View>
-
-        {/* Filter Chips - template: flex gap-3 p-3 overflow-x-auto */}
-        <View style={styles.filtersRow}>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={styles.chipsContainer}
-            contentContainerStyle={styles.chipsContent}
-          >
-            {filterChips.map((chip, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.filterChip,
-                  activeFilters.includes(chip.label) && styles.activeFilterChip
-                ]}
-                onPress={() => toggleFilter(chip.label)}
-              >
-                <Text style={[
-                  styles.filterChipText,
-                  activeFilters.includes(chip.label) && styles.activeFilterChipText
-                ]}>
-                  {chip.displayName}
-                </Text>
-                <Text style={[
-                  styles.dropdownIcon,
-                  { color: activeFilters.includes(chip.label) ? Colors.primary : Colors.textDark }
-                ]}>
-                  ▼
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-          <TouchableOpacity style={styles.refreshButton} onPress={refreshFavorites}>
-            <Text style={styles.refreshIcon}>↻</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Image Grid - template: grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-4 p-4 flex-1 */}
+        <FavoritesHeader 
+          onBack={handleBack} 
+          onSort={handleSort} 
+        />
+        
+        <FavoritesSearchBar 
+          searchQuery={searchQuery} 
+          onSearchChange={setSearchQuery} 
+        />
+        
+        <FavoritesFilters 
+          filterChips={filterChips}
+          activeFilters={activeFilters}
+          onToggleFilter={toggleFilter}
+          onRefresh={refreshFavorites}
+        />
+        
         <ScrollView style={styles.gridContainer} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {loading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={Colors.primary} />
-              <Text style={styles.loadingText}>Loading favorites...</Text>
-            </View>
+            <FavoritesLoadingState />
           ) : (
-            <View style={styles.grid}>
-              {filteredFavoritePlans.map((plan) => (
-                <TouchableOpacity
-                  key={plan.id}
-                  style={styles.planCard}
-                  onPress={() => handlePlanPress(plan.id)}
-                >
-                  <View style={styles.planImageContainer}>
-                    <Image source={{ uri: plan.image }} style={styles.planImage} />
-                    <TouchableOpacity 
-                      style={styles.favoriteIcon}
-                      onPress={() => toggleFavorite(plan.id)}
-                    >
-                      <Text style={[styles.heartIcon, favoriteIds.has(plan.id) && styles.heartIconActive]}>♥</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.planInfo}>
-                    <Text style={styles.planTitle}>{plan.title}</Text>
-                    <Text style={styles.planDescription}>{plan.description}</Text>
-                    <Text style={styles.planCategory}>{plan.category}</Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-              {filteredFavoritePlans.length === 0 && !loading && (
-                <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>No favorites found</Text>
-                  <Text style={styles.emptySubtext}>Try adjusting your filters or add some plans to favorites</Text>
-                </View>
-              )}
-            </View>
+            <FavoritesGrid 
+              plans={filteredFavoritePlans}
+              favoriteIds={favoriteIds}
+              onPlanPress={handlePlanPress}
+              onToggleFavorite={toggleFavorite}
+              loading={loading}
+            />
           )}
         </ScrollView>
       </View>
@@ -601,7 +518,6 @@ const styles = StyleSheet.create({
   // Grid Container - template: grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-4 p-4 flex-1
   gridContainer: {
     flex: 1,
-    paddingHorizontal: Spacing.lg,
   },
   
   grid: {

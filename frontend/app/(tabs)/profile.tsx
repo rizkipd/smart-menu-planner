@@ -11,6 +11,7 @@ import {
   Switch,
   ActivityIndicator,
   Alert,
+  Platform,
 } from 'react-native';
 import { Colors } from '../../constants/colors';
 import { Spacing } from '../../constants/spacing';
@@ -439,22 +440,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.backgroundDark,
-    paddingTop: 50, // Mobile status bar spacing
-    padding: 16,
-    paddingBottom: 8,
+    paddingTop: Platform.OS === 'ios' ? 65 : 25, // Platform-specific status bar spacing
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.sm,
     justifyContent: 'space-between',
   },
   
   backButton: {
-    width: 48,
-    height: 48,
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: Colors.cardDark,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   backIcon: {
     color: Colors.textDark,
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     fontFamily: 'System',
   },

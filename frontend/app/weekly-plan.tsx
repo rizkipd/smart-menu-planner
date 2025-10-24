@@ -17,22 +17,7 @@ import { Spacing } from '../constants/spacing';
 
 const { width } = Dimensions.get('window');
 
-// Responsive breakpoints
-const isSmallScreen = width < 375;
-const isMediumScreen = width >= 375 && width < 414;
-const isLargeScreen = width >= 414;
-
-const getResponsiveSpacing = (small: number, medium: number, large: number) => {
-  if (isSmallScreen) return small;
-  if (isMediumScreen) return medium;
-  return large;
-};
-
-const getResponsiveFontSize = (small: number, medium: number, large: number) => {
-  if (isSmallScreen) return small;
-  if (isMediumScreen) return medium;
-  return large;
-};
+// Removed custom responsive functions - using standard Spacing constants instead
 
 export default function WeeklyPlan() {
   const router = useRouter();
@@ -295,7 +280,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
-    paddingBottom: getResponsiveSpacing(13, 15, 17),
+    paddingBottom: Spacing.lg,
     paddingTop: Spacing.lg,
   },
 
@@ -419,7 +404,7 @@ const styles = StyleSheet.create({
   // Bottom Actions - template: p-4 mt-auto sticky bottom-0 bg-background-light dark:bg-background-dark
   bottomActions: {
     padding: Spacing.lg, // p-4
-    paddingBottom: getResponsiveSpacing(20, 24, 28), // Extra padding for safe area
+    paddingBottom: Spacing.xxl, // Extra padding for safe area
     backgroundColor: Colors.backgroundDark,
   },
 

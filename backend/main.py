@@ -48,6 +48,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="192.168.0.95",  # Allow mobile connections
-        port=8000,
+        port=8001,
         reload=True
     )
