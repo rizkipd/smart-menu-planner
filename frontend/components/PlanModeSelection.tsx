@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,13 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
 import { Spacing } from '../constants/spacing';
+import { MobileApiService } from '../services/api';
 
 interface PlanMode {
   id: string;
@@ -28,8 +30,8 @@ interface PlanModeSelectionProps {
   onPlanSelect: (selectedMode: PlanMode) => void;
 }
 
-// Template-exact plan modes with beautiful images and gradients
-const planModes: PlanMode[] = [
+// Fallback plan modes - used when API is unavailable
+const fallbackPlanModes: PlanMode[] = [
   {
     id: 'diet_health',
     title: 'Diet & Health',
@@ -54,12 +56,65 @@ const planModes: PlanMode[] = [
   },
 ];
 
+// Image mapping for modes from API
+const modeImages: Record<string, string> = {
+  'diet_health': 'https://lh3.googleusercontent.com/aida-public/AB6AXuCaOg5RziT9w_V4wlcMr4oPfvPHMuL8cU56wKFRgxcf1yJ-Esrl-uPyYS5-xNGjRVRFu_7jX7-4XKW-nCq1w1RXHP_rHvGpLLkwDQjvlEs9pMoExv7lnZsIqzzcfQi2Vf1tbqiI8IEjWDquDDj-tfL-1DobzabQZxN9rd2d-LeIeoxD4oBBmo4mcIw2XITqmcZVZmbrKkrI1sB0X5S8eXnX2QxrSLCUMw1lBD97un-TNbjb2INh2KvKdnBjSllyfgug8m-n3vnuL-ez',
+  'taste_satisfaction': 'https://lh3.googleusercontent.com/aida-public/AB6AXuBAx5xPNlkSbWWu9d3v5wFEMqISovKmaqqqkpko4IDVzuS2egkbOBFbeGRGNEpyZ6aEa3NlKbjdWA7m_vuNTSc4w9VudTjGn8zpPMmouqhj4Bfe5DoeefW9hx5Ru44fXIBxgWx_v3qRdY2fi16b4JUeq4U5ddUT9osmx5h6oU0Zn5BShq_9tHX12aoLOSlcaokCnlKu_2ZhYx7jKYN7PYTTTXKBZvapGuVpP7bjwhGtDdmuKUPvF10QM-72X5-MenmIUtxx1JOKjdlK',
+  'budget_friendly': 'https://lh3.googleusercontent.com/aida-public/AB6AXuDaukLgPSWZq6ULELdDIPVI6EDxJzcIM758cRS6E-ao5pKPsDhnHja2O3rlf5g4FUbmZJolB8_vSNjxh2aS_S0d_r7hrdbC1Rv5lIl39S4EOAleXA38QAjXuZgv42TAJkbgJB46N-S2g28gJLpR9MNZosGB52cUkj0ZjKcKz6aUic0RDiN6Z2WeR_R44F5iAocaSnbIxP7dddEvVQQAUgWBv9xYbBDXBzNBhFjxAxyWIcrIdIRzvSE8PeCTVsTrGSq1cnQTCz6fgVN7',
+};
+
+const modeGradients: Record<string, string[]> = {
+  'diet_health': Colors.gradients.health,
+  'taste_satisfaction': Colors.gradients.delicious,
+  'budget_friendly': Colors.gradients.economic,
+};
+
 const { width, height } = Dimensions.get('window');
 
 export default function PlanModeSelection({ onBack, onPlanSelect }: PlanModeSelectionProps) {
-  const [selectedMode, setSelectedMode] = useState<PlanMode>(
-    planModes.find(mode => mode.selected) || planModes[0]
-  );
+  const [planModes, setPlanModes] = useState<PlanMode[]>(fallbackPlanModes);
+  const [selectedMode, setSelectedMode] = useState<PlanMode>(fallbackPlanModes[2]); // Default to budget_friendly
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch plan modes from API
+  useEffect(() => {
+    const fetchModes = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await MobileApiService.getPlanModes();
+
+        if (response.success && response.data?.modes) {
+          // Map API response to PlanMode interface
+          const apiModes: PlanMode[] = response.data.modes.map((mode: any) => ({
+            id: mode.id || mode.mode_id,
+            title: mode.title || mode.name,
+            description: mode.description,
+            image: modeImages[mode.id || mode.mode_id] || fallbackPlanModes[0].image,
+            gradient: modeGradients[mode.id || mode.mode_id] || Colors.gradients.health,
+          }));
+
+          if (apiModes.length > 0) {
+            setPlanModes(apiModes);
+            setSelectedMode(apiModes[0]);
+          }
+        } else {
+          // Use fallback if API returns no data
+          console.log('Using fallback plan modes');
+        }
+      } catch (err: any) {
+        console.error('Failed to fetch plan modes:', err);
+        setError('Could not load plan modes. Using defaults.');
+        // Keep using fallback modes
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModes();
+  }, []);
 
   const handleModeSelect = (mode: PlanMode) => {
     setSelectedMode(mode);
@@ -147,13 +202,23 @@ export default function PlanModeSelection({ onBack, onPlanSelect }: PlanModeSele
 
         {/* Content area - template: flex-1 p-4 */}
         <View style={styles.content}>
-          <ScrollView 
-            style={styles.scrollArea}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {planModes.map(renderPlanCard)}
-          </ScrollView>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={Colors.primary} />
+              <Text style={styles.loadingText}>Loading plan options...</Text>
+            </View>
+          ) : (
+            <ScrollView
+              style={styles.scrollArea}
+              contentContainerStyle={styles.scrollContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {error && (
+                <Text style={styles.errorText}>{error}</Text>
+              )}
+              {planModes.map(renderPlanCard)}
+            </ScrollView>
+          )}
         </View>
 
         {/* Continue button - template: p-4 mt-auto */}
@@ -374,5 +439,33 @@ const styles = StyleSheet.create({
     lineHeight: Typography.textStyles.buttonText.lineHeight, // leading-normal
     letterSpacing: Typography.letterSpacing.template, // tracking-[0.015em]
     fontFamily: Typography.fontFamily.display,
+  },
+
+  // Loading container
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: Spacing.xxl,
+  },
+
+  loadingText: {
+    color: Colors.textMuted,
+    fontSize: Typography.fontSize.base,
+    marginTop: Spacing.md,
+    fontFamily: Typography.fontFamily.body,
+  },
+
+  // Error text
+  errorText: {
+    color: Colors.warning,
+    fontSize: Typography.fontSize.sm,
+    textAlign: 'center',
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    backgroundColor: Colors.warning + '20',
+    borderRadius: Spacing.borderRadius.md,
+    marginBottom: Spacing.md,
+    fontFamily: Typography.fontFamily.body,
   },
 });

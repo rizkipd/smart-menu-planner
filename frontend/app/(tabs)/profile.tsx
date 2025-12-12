@@ -6,16 +6,20 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
-  Image,
   TextInput,
   Switch,
   ActivityIndicator,
   Alert,
   Platform,
 } from 'react-native';
+import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
+import { launchImageLibrary, ImagePickerResponse, MediaType } from 'react-native-image-picker';
 import { Colors } from '../../constants/colors';
 import { Spacing } from '../../constants/spacing';
+import { AvatarImage, AvatarSizes } from '../../components/AvatarImage';
 import UserProfileService, { UserProfile } from '../../services/userProfile';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Profile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -24,6 +28,64 @@ export default function Profile() {
   const [allergyInput, setAllergyInput] = useState('');
   const [likedInput, setLikedInput] = useState('');
   const [dislikedInput, setDislikedInput] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const { signOut, user } = useAuth();
+  const router = useRouter();
+
+  // Handle profile picture change
+  const handleProfilePictureChange = () => {
+    Alert.alert(
+      'Profile Picture',
+      'Choose a profile picture',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Choose Photo',
+          onPress: () => {
+            launchImageLibrary(
+              {
+                mediaType: 'photo' as MediaType,
+                quality: 0.8,
+                includeBase64: false,
+                maxHeight: 512,
+                maxWidth: 512,
+              },
+              (response: ImagePickerResponse) => {
+                if (response.assets && response.assets[0]) {
+                  const source = response.assets[0];
+                  updateProfileAvatar(source.uri);
+                }
+              }
+            );
+          },
+        },
+      ]
+    );
+  };
+
+  // Update profile avatar
+  const updateProfileAvatar = async (imageUri: string) => {
+    try {
+      setUploadingImage(true);
+      
+      // For now, update local profile
+      // TODO: Upload to Firebase Storage and update with Firebase URL
+      const updatedProfile = await UserProfileService.updateProfile({ avatar: imageUri });
+      setProfile(updatedProfile);
+      
+      Alert.alert('Success', 'Profile picture updated successfully!');
+    } catch (error: any) {
+      console.error('Error updating profile picture:', error);
+      Alert.alert('Error', 'Failed to update profile picture');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   // Load profile on component mount
   useEffect(() => {
@@ -131,6 +193,36 @@ export default function Profile() {
     console.log('Back pressed');
   };
 
+  // Handle sign out
+  const handleSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              setLoggingOut(true);
+              await signOut();
+              router.replace('/');
+            } catch (error: any) {
+              console.error('Sign out error:', error);
+              Alert.alert('Error', 'Failed to sign out. Please try again.');
+            } finally {
+              setLoggingOut(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   if (loading) {
     return (
       <View style={[styles.container, styles.loadingContainer]}>
@@ -170,15 +262,13 @@ export default function Profile() {
           <View style={styles.profileSection}>
             <View style={styles.profileRow}>
               <View style={styles.profileInfo}>
-                <View style={styles.avatarContainer}>
-                  <Image 
-                    source={{ uri: profile.avatar }}
-                    style={styles.avatar}
-                  />
-                  <TouchableOpacity style={styles.editAvatarButton}>
-                    <Text style={styles.editIcon}>✎</Text>
-                  </TouchableOpacity>
-                </View>
+                <AvatarImage
+                  uri={profile.avatar}
+                  name={profile.name}
+                  size={AvatarSizes.profile}
+                  editable={true}
+                  onPress={() => handleProfilePictureChange()}
+                />
                 <View style={styles.userInfo}>
                   <Text style={styles.userName}>{profile.name}</Text>
                   <Text style={styles.userEmail}>{profile.email}</Text>
@@ -394,7 +484,7 @@ export default function Profile() {
               />
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.settingRow}
               onPress={() => updateProfile({ unitsOfMeasurement: profile.unitsOfMeasurement === 'metric' ? 'imperial' : 'metric' })}
             >
@@ -405,6 +495,38 @@ export default function Profile() {
                 </Text>
                 <Text style={styles.arrowIcon}>›</Text>
               </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* Divider */}
+          <View style={styles.divider} />
+
+          {/* Account Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Account</Text>
+
+            {/* Show logged in user email if available */}
+            {user?.email && (
+              <View style={styles.accountInfoRow}>
+                <MaterialIcons name="email" size={20} color={Colors.textMuted} />
+                <Text style={styles.accountInfoText}>{user.email}</Text>
+              </View>
+            )}
+
+            {/* Sign Out Button */}
+            <TouchableOpacity
+              style={styles.signOutButton}
+              onPress={handleSignOut}
+              disabled={loggingOut}
+            >
+              {loggingOut ? (
+                <ActivityIndicator size="small" color={Colors.error} />
+              ) : (
+                <>
+                  <MaterialIcons name="logout" size={24} color={Colors.error} />
+                  <Text style={styles.signOutButtonText}>Sign Out</Text>
+                </>
+              )}
             </TouchableOpacity>
           </View>
 
@@ -495,35 +617,7 @@ const styles = StyleSheet.create({
     gap: Spacing.lg,
   },
 
-  avatarContainer: {
-    position: 'relative',
-  },
-
-  avatar: {
-    width: 128, // w-32 h-32 from template
-    height: 128,
-    borderRadius: 64, // rounded-full
-    backgroundColor: Colors.cardSecondary,
-  },
-
-  editAvatarButton: {
-    position: 'absolute',
-    bottom: 4,
-    right: 4,
-    width: 32,
-    height: 32,
-    backgroundColor: Colors.primary,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  editIcon: {
-    color: Colors.textLight,
-    fontSize: 16,
-    fontFamily: 'System',
-  },
-
+  
   userInfo: {
     flex: 1,
     justifyContent: 'center',
@@ -821,5 +915,37 @@ const styles = StyleSheet.create({
   savingText: {
     color: Colors.textMuted,
     fontSize: 14,
+  },
+
+  // Account section styles
+  accountInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+    paddingVertical: Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.borderDark,
+  },
+
+  accountInfoText: {
+    color: Colors.textMuted,
+    fontSize: 14,
+  },
+
+  signOutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.sm,
+    backgroundColor: Colors.error + '20',
+    borderRadius: Spacing.borderRadius.lg,
+    height: 56,
+    marginTop: Spacing.lg,
+  },
+
+  signOutButtonText: {
+    color: Colors.error,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

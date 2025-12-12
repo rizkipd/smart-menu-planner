@@ -19,7 +19,7 @@ export interface ApiConfig {
 
 // Default configuration values
 const DEFAULT_CONFIG: ApiConfig = {
-  baseUrl: 'http://192.168.0.95:8000',
+  baseUrl: 'http://192.168.0.95:8001',
   version: 'v1',
   timeout: 10000, // 10 seconds
   healthEndpoint: '/health',

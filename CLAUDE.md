@@ -7,7 +7,7 @@
 - Go with React Native + Expo + NativeWind (Tailwind for React Native)
 - Recreate the frontend using [docs/smart menu/] template !!!, I asked GLM to do so but it sucks
 - the frontend_backup was near to. the template but it's messed up
-- Read @README for the API backend
+- Read @README for the API backend and @PROJECT_STATUS.md
 - I want you check all the page design to be compred to the @"docs/smart menu/" all templates                                         
  1. Page  was created by GLM  but it is totally different with template
  2. There is     flex-grow: 1; issue wchich makes the layout messup like on  selected menu page, there is space between day and meal list due to this flex-grow in day list

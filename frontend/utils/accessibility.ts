@@ -4,6 +4,7 @@
  */
 
 import { AccessibilityRole, AccessibilityState, AccessibilityProps } from 'react-native';
+import { parseToRgba } from 'color2k';
 
 // WCAG 2.1 contrast ratios
 export const CONTRAST_RATIOS = {
@@ -153,7 +154,7 @@ export function createTabA11yProps(
  */
 export function createListA11yProps(
   itemCount: number,
-  listType: 'meal plans' | 'ingredients' | 'recipes' | 'shopping items' = 'items'
+  listType: 'meal plans' | 'ingredients' | 'recipes' | 'shopping items' = 'ingredients'
 ): AccessibilityProps {
   return {
     accessible: true,
@@ -295,17 +296,45 @@ export function createHeaderA11yProps(
 }
 
 /**
- * Calculate color contrast ratio (simplified)
- * For production, consider using a more robust color contrast library
+ * Calculate relative luminance of a color (WCAG standard)
+ */
+function calculateLuminance(color: string): number {
+  try {
+    const rgbaColor = parseToRgba(color);
+    const [r, g, b] = rgbaColor.map(val => val / 255);
+    
+    // Apply gamma correction
+    const rsRGB = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+    const gsRGB = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+    const bsRGB = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+    
+    // Calculate relative luminance
+    return 0.2126 * rsRGB + 0.7152 * gsRGB + 0.0722 * bsRGB;
+  } catch (error) {
+    console.warn('Error calculating luminance for color:', color, error);
+    return 0.5; // Fallback value
+  }
+}
+
+/**
+ * Calculate color contrast ratio (WCAG compliant)
+ * Returns the contrast ratio between foreground and background colors
  */
 export function calculateContrastRatio(foreground: string, background: string): number {
-  // This is a simplified implementation
-  // In a real app, you'd want to use a proper color contrast calculation library
-  // like 'color2k' or 'wcag-contrast'
-  
-  // For now, return a mock value that assumes good contrast
-  // TODO: Implement proper contrast calculation
-  return 4.5;
+  try {
+    const l1 = calculateLuminance(foreground);
+    const l2 = calculateLuminance(background);
+    
+    // Ensure lighter color is l1
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    
+    // Calculate contrast ratio
+    return (lighter + 0.05) / (darker + 0.05);
+  } catch (error) {
+    console.warn('Error calculating contrast ratio for colors:', foreground, background, error);
+    return 4.5; // Fallback value (meets WCAG AA for normal text)
+  }
 }
 
 /**

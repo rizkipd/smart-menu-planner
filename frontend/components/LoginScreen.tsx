@@ -16,6 +16,17 @@ import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
 import { Spacing } from '../constants/spacing';
 
+// Try to import Firebase - may fail in Expo Go
+let FirebaseAuthService: any = null;
+let isFirebaseAvailable = false;
+try {
+  FirebaseAuthService = require('../services/firebaseAuthService').FirebaseAuthService;
+  isFirebaseAvailable = true;
+} catch (error) {
+  console.log('Firebase not available in LoginScreen');
+  isFirebaseAvailable = false;
+}
+
 interface LoginScreenProps {
   onLogin: () => void;
   onQuickDemo: () => void;
@@ -58,13 +69,25 @@ export default function LoginScreen({ onLogin, onQuickDemo, onSignUp }: LoginScr
     if (!validateForm()) {
       return;
     }
-    
+
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      if (isFirebaseAvailable && FirebaseAuthService) {
+        await FirebaseAuthService.signIn({ email, password });
+        onLogin();
+      } else {
+        // Firebase not available (Expo Go) - show message and use demo mode
+        Alert.alert(
+          'Firebase Not Available',
+          'Firebase authentication requires a development build. Use "Quick Demo" to explore the app.',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error: any) {
+      Alert.alert('Login Failed', error.message || 'Unable to sign in. Please check your credentials.');
+    } finally {
       setLoading(false);
-      onLogin();
-    }, 1000);
+    }
   };
 
   const handleQuickDemo = () => {
@@ -83,8 +106,36 @@ export default function LoginScreen({ onLogin, onQuickDemo, onSignUp }: LoginScr
     Alert.alert('Apple Login', 'Apple authentication will be implemented in the next phase');
   };
 
-  const handleForgotPassword = () => {
-    Alert.alert('Forgot Password', 'Password reset feature will be implemented in the next phase');
+  const handleForgotPassword = async () => {
+    if (!email) {
+      Alert.alert('Email Required', 'Please enter your email address first.');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+      return;
+    }
+
+    if (!isFirebaseAvailable || !FirebaseAuthService) {
+      Alert.alert(
+        'Firebase Not Available',
+        'Password reset requires a development build. In Expo Go, use the "Quick Demo" button instead.'
+      );
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await FirebaseAuthService.resetPassword(email);
+      Alert.alert(
+        'Password Reset Sent',
+        'Check your email for instructions to reset your password.'
+      );
+    } catch (error: any) {
+      Alert.alert('Reset Failed', error.message || 'Unable to send password reset email.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

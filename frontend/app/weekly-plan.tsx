@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import {
   View,
   Text,
@@ -9,72 +9,182 @@ import {
   ScrollView,
   Image,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
 import { Spacing } from '../constants/spacing';
+import { MobileApiService } from '../services/api';
 
 const { width } = Dimensions.get('window');
 
-// Removed custom responsive functions - using standard Spacing constants instead
+interface Meal {
+  name: string;
+  type: string;
+  image: string;
+}
+
+interface MealPlan {
+  [day: string]: Meal[];
+}
+
+// Fallback meal data when API is unavailable
+const fallbackMealsData: MealPlan = {
+  'Mon': [
+    {
+      name: 'Avocado Toast',
+      type: 'Breakfast',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCNIEFsK9yTwAhtyRyhyMU2nRVahy4zYjevAsnKtjFlA2jcQPhWB37clljw3gx8lackUpURffYfR5CgCYCgVO4rFMLpnaPP4tSnDm_Zq20VESGo6sInCXwT82hQSVL3swPtPmdJy2pOrsPh-Zurc9Ky64JxAoDwR7UpCVcX0ThLStFoU8PKf5HR4HWpTadl4sb3XR0fVrRkeipSxQxmxBtuzzyy7p1JyJ9A1BlNvqAOSadZSU0_s7DDLgK6-6PYKLw6feiTM2CwIgT'
+    },
+    {
+      name: 'Chicken Salad',
+      type: 'Lunch',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwukDMt5cIZ79e5Ztal9eAtocmmME-J3qYrx6M9Gl6D-pOk_jAOiTNg6rf5VzcWfE-DRrssxUnNpJhMJ9lSpkSzin3V5Zq9FSZjNaO7dI6lpY4a-Ilq3WORRctyTX8DAXZkTxu9eQHe34q5M-eZ6SXZ1fsPD_jOTHqOAQXYZqf2I1GuZrc24LlkNudmNy7-b3QjPZ4cxhD8mDkuKCd76DuMEM8rZuAJNWWTa9d6yRfaOxvQXiBs3uhjN0SkBoUpVeZ2H5CifjLsKcN'
+    },
+    {
+      name: 'Salmon with Veggies',
+      type: 'Dinner',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrSXNUPhakc0mEHQ8dDVXObjOs0Tj1kYFp4V32XAE70RoH5srRA6XwCXq52PyJ1FjCT1A9tcnDZn95f5BvhyTX5C5zwnOZdCirvxIMmbIstg41zoRs286QY4Xx_fCLyDyoFjCkeCIgpHaBxKKxuLie_nOzv_fv1n--zwxCxDnxfAVyJ8hkpBNLRmtdz7lvD8JdtCjHSbUO99Bd4EU2_3yH12zUFtoImVGCcBwUwS2eUdEzrW8Ev14UNWpzjXavni_xLzsvzVYhX9x5'
+    }
+  ],
+  'Tue': [
+    {
+      name: 'Greek Yogurt Bowl',
+      type: 'Breakfast',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCNIEFsK9yTwAhtyRyhyMU2nRVahy4zYjevAsnKtjFlA2jcQPhWB37clljw3gx8lackUpURffYfR5CgCYCgVO4rFMLpnaPP4tSnDm_Zq20VESGo6sInCXwT82hQSVL3swPtPmdJy2pOrsPh-Zurc9Ky64JxAoDwR7UpCVcX0ThLStFoU8PKf5HR4HWpTadl4sb3XR0fVrRkeipSxQxmxBtuzzyy7p1JyJ9A1BlNvqAOSadZSU0_s7DDLgK6-6PYKLw6feiTM2CwIgT'
+    },
+    {
+      name: 'Quinoa Bowl',
+      type: 'Lunch',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwukDMt5cIZ79e5Ztal9eAtocmmME-J3qYrx6M9Gl6D-pOk_jAOiTNg6rf5VzcWfE-DRrssxUnNpJhMJ9lSpkSzin3V5Zq9FSZjNaO7dI6lpY4a-Ilq3WORRctyTX8DAXZkTxu9eQHe34q5M-eZ6SXZ1fsPD_jOTHqOAQXYZqf2I1GuZrc24LlkNudmNy7-b3QjPZ4cxhD8mDkuKCd76DuMEM8rZuAJNWWTa9d6yRfaOxvQXiBs3uhjN0SkBoUpVeZ2H5CifjLsKcN'
+    },
+    {
+      name: 'Grilled Chicken',
+      type: 'Dinner',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrSXNUPhakc0mEHQ8dDVXObjOs0Tj1kYFp4V32XAE70RoH5srRA6XwCXq52PyJ1FjCT1A9tcnDZn95f5BvhyTX5C5zwnOZdCirvxIMmbIstg41zoRs286QY4Xx_fCLyDyoFjCkeCIgpHaBxKKxuLie_nOzv_fv1n--zwxCxDnxfAVyJ8hkpBNLRmtdz7lvD8JdtCjHSbUO99Bd4EU2_3yH12zUFtoImVGCcBwUwS2eUdEzrW8Ev14UNWpzjXavni_xLzsvzVYhX9x5'
+    }
+  ],
+  'Wed': [
+    {
+      name: 'Overnight Oats',
+      type: 'Breakfast',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCNIEFsK9yTwAhtyRyhyMU2nRVahy4zYjevAsnKtjFlA2jcQPhWB37clljw3gx8lackUpURffYfR5CgCYCgVO4rFMLpnaPP4tSnDm_Zq20VESGo6sInCXwT82hQSVL3swPtPmdJy2pOrsPh-Zurc9Ky64JxAoDwR7UpCVcX0ThLStFoU8PKf5HR4HWpTadl4sb3XR0fVrRkeipSxQxmxBtuzzyy7p1JyJ9A1BlNvqAOSadZSU0_s7DDLgK6-6PYKLw6feiTM2CwIgT'
+    },
+    {
+      name: 'Veggie Wrap',
+      type: 'Lunch',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwukDMt5cIZ79e5Ztal9eAtocmmME-J3qYrx6M9Gl6D-pOk_jAOiTNg6rf5VzcWfE-DRrssxUnNpJhMJ9lSpkSzin3V5Zq9FSZjNaO7dI6lpY4a-Ilq3WORRctyTX8DAXZkTxu9eQHe34q5M-eZ6SXZ1fsPD_jOTHqOAQXYZqf2I1GuZrc24LlkNudmNy7-b3QjPZ4cxhD8mDkuKCd76DuMEM8rZuAJNWWTa9d6yRfaOxvQXiBs3uhjN0SkBoUpVeZ2H5CifjLsKcN'
+    },
+    {
+      name: 'Steak and Salad',
+      type: 'Dinner',
+      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrSXNUPhakc0mEHQ8dDVXObjOs0Tj1kYFp4V32XAE70RoH5srRA6XwCXq52PyJ1FjCT1A9tcnDZn95f5BvhyTX5C5zwnOZdCirvxIMmbIstg41zoRs286QY4Xx_fCLyDyoFjCkeCIgpHaBxKKxuLie_nOzv_fv1n--zwxCxDnxfAVyJ8hkpBNLRmtdz7lvD8JdtCjHSbUO99Bd4EU2_3yH12zUFtoImVGCcBwUwS2eUdEzrW8Ev14UNWpzjXavni_xLzsvzVYhX9x5'
+    }
+  ],
+};
 
 export default function WeeklyPlan() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ modeId?: string; planId?: string }>();
   const [selectedDay, setSelectedDay] = useState('Mon');
   const [activeTab, setActiveTab] = useState('meal'); // 'meal' or 'shopping'
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
+  const [mealsData, setMealsData] = useState<MealPlan>(fallbackMealsData);
+  const [planTitle, setPlanTitle] = useState('Weekly Plan');
+  const [error, setError] = useState<string | null>(null);
 
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  // Sample meal data based on template for each day
-  const mealsData = {
-    'Mon': [
-      {
-        name: 'Avocado Toast',
-        type: 'Breakfast',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCNIEFsK9yTwAhtyRyhyMU2nRVahy4zYjevAsnKtjFlA2jcQPhWB37clljw3gx8lackUpURffYfR5CgCYCgVO4rFMLpnaPP4tSnDm_Zq20VESGo6sInCXwT82hQSVL3swPtPmdJy2pOrsPh-Zurc9Ky64JxAoDwR7UpCVcX0ThLStFoU8PKf5HR4HWpTadl4sb3XR0fVrRkeipSxQxmxBtuzzyy7p1JyJ9A1BlNvqAOSadZSU0_s7DDLgK6-6PYKLw6feiTM2CwIgT'
-      },
-      {
-        name: 'Chicken Salad',
-        type: 'Lunch',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwukDMt5cIZ79e5Ztal9eAtocmmME-J3qYrx6M9Gl6D-pOk_jAOiTNg6rf5VzcWfE-DRrssxUnNpJhMJ9lSpkSzin3V5Zq9FSZjNaO7dI6lpY4a-Ilq3WORRctyTX8DAXZkTxu9eQHe34q5M-eZ6SXZ1fsPD_jOTHqOAQXYZqf2I1GuZrc24LlkNudmNy7-b3QjPZ4cxhD8mDkuKCd76DuMEM8rZuAJNWWTa9d6yRfaOxvQXiBs3uhjN0SkBoUpVeZ2H5CifjLsKcN'
-      },
-      {
-        name: 'Salmon with Veggies',
-        type: 'Dinner',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrSXNUPhakc0mEHQ8dDVXObjOs0Tj1kYFp4V32XAE70RoH5srRA6XwCXq52PyJ1FjCT1A9tcnDZn95f5BvhyTX5C5zwnOZdCirvxIMmbIstg41zoRs286QY4Xx_fCLyDyoFjCkeCIgpHaBxKKxuLie_nOzv_fv1n--zwxCxDnxfAVyJ8hkpBNLRmtdz7lvD8JdtCjHSbUO99Bd4EU2_3yH12zUFtoImVGCcBwUwS2eUdEzrW8Ev14UNWpzjXavni_xLzsvzVYhX9x5'
+  // Fetch meal plan from API
+  useEffect(() => {
+    const fetchMealPlan = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // If planId is provided, fetch existing plan
+        if (params.planId) {
+          const planIdNum = parseInt(params.planId, 10);
+          if (!isNaN(planIdNum)) {
+            const response = await MobileApiService.getPlanDetails(planIdNum);
+            if (response.success && response.data) {
+              const plan = response.data as any;
+              setPlanTitle(plan.title || plan.name || 'Weekly Plan');
+              if (plan.weekly_plan) {
+                setMealsData(transformApiMeals(plan.weekly_plan));
+              }
+            }
+          }
+        }
+        // Otherwise, if modeId is provided, generate a new plan
+        else if (params.modeId) {
+          setGenerating(true);
+          const response = await MobileApiService.generateMealPlan({ mode: params.modeId });
+          if (response.success && response.data) {
+            const plan = response.data as any;
+            setPlanTitle(plan.title || plan.name || 'Weekly Plan');
+            if (plan.weekly_plan) {
+              setMealsData(transformApiMeals(plan.weekly_plan));
+            }
+          }
+          setGenerating(false);
+        }
+        // Use fallback data if no params
+      } catch (err: any) {
+        console.error('Failed to fetch meal plan:', err);
+        setError('Could not load meal plan. Using sample data.');
+        // Keep using fallback data
+      } finally {
+        setLoading(false);
+        setGenerating(false);
       }
-    ],
-    'Tue': [
-      {
-        name: 'Greek Yogurt Bowl',
-        type: 'Breakfast',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCNIEFsK9yTwAhtyRyhyMU2nRVahy4zYjevAsnKtjFlA2jcQPhWB37clljw3gx8lackUpURffYfR5CgCYCgVO4rFMLpnaPP4tSnDm_Zq20VESGo6sInCXwT82hQSVL3swPtPmdJy2pOrsPh-Zurc9Ky64JxAoDwR7UpCVcX0ThLStFoU8PKf5HR4HWpTadl4sb3XR0fVrRkeipSxQxmxBtuzzyy7p1JyJ9A1BlNvqAOSadZSU0_s7DDLgK6-6PYKLw6feiTM2CwIgT'
-      },
-      {
-        name: 'Quinoa Bowl',
-        type: 'Lunch',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwukDMt5cIZ79e5Ztal9eAtocmmME-J3qYrx6M9Gl6D-pOk_jAOiTNg6rf5VzcWfE-DRrssxUnNpJhMJ9lSpkSzin3V5Zq9FSZjNaO7dI6lpY4a-Ilq3WORRctyTX8DAXZkTxu9eQHe34q5M-eZ6SXZ1fsPD_jOTHqOAQXYZqf2I1GuZrc24LlkNudmNy7-b3QjPZ4cxhD8mDkuKCd76DuMEM8rZuAJNWWTa9d6yRfaOxvQXiBs3uhjN0SkBoUpVeZ2H5CifjLsKcN'
-      },
-      {
-        name: 'Grilled Chicken',
-        type: 'Dinner',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrSXNUPhakc0mEHQ8dDVXObjOs0Tj1kYFp4V32XAE70RoH5srRA6XwCXq52PyJ1FjCT1A9tcnDZn95f5BvhyTX5C5zwnOZdCirvxIMmbIstg41zoRs286QY4Xx_fCLyDyoFjCkeCIgpHaBxKKxuLie_nOzv_fv1n--zwxCxDnxfAVyJ8hkpBNLRmtdz7lvD8JdtCjHSbUO99Bd4EU2_3yH12zUFtoImVGCcBwUwS2eUdEzrW8Ev14UNWpzjXavni_xLzsvzVYhX9x5'
+    };
+
+    fetchMealPlan();
+  }, [params.planId, params.modeId]);
+
+  // Transform API meal data to component format
+  const transformApiMeals = (weeklyPlan: any): MealPlan => {
+    const transformed: MealPlan = {};
+    const dayMap: Record<string, string> = {
+      'monday': 'Mon',
+      'tuesday': 'Tue',
+      'wednesday': 'Wed',
+      'thursday': 'Thu',
+      'friday': 'Fri',
+      'saturday': 'Sat',
+      'sunday': 'Sun'
+    };
+
+    for (const [day, meals] of Object.entries(weeklyPlan)) {
+      const shortDay = dayMap[day.toLowerCase()] || day.substring(0, 3);
+      if (Array.isArray(meals)) {
+        transformed[shortDay] = meals.map((meal: any) => ({
+          name: meal.name || meal.title || 'Unknown',
+          type: meal.type || meal.meal_type || 'Meal',
+          image: meal.image || meal.image_url || getDefaultImage(meal.type || meal.meal_type)
+        }));
       }
-    ],
-    // Add default for other days that uses same content
-    'Wed': [
-      {
-        name: 'Avocado Toast',
-        type: 'Breakfast',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCNIEFsK9yTwAhtyRyhyMU2nRVahy4zYjevAsnKtjFlA2jcQPhWB37clljw3gx8lackUpURffYfR5CgCYCgVO4rFMLpnaPP4tSnDm_Zq20VESGo6sInCXwT82hQSVL3swPtPmdJy2pOrsPh-Zurc9Ky64JxAoDwR7UpCVcX0ThLStFoU8PKf5HR4HWpTadl4sb3XR0fVrRkeipSxQxmxBtuzzyy7p1JyJ9A1BlNvqAOSadZSU0_s7DDLgK6-6PYKLw6feiTM2CwIgT'
-      }
-    ]
+    }
+
+    return Object.keys(transformed).length > 0 ? transformed : fallbackMealsData;
+  };
+
+  // Default images for meal types
+  const getDefaultImage = (mealType: string): string => {
+    const defaultImages: Record<string, string> = {
+      'Breakfast': 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCNIEFsK9yTwAhtyRyhyMU2nRVahy4zYjevAsnKtjFlA2jcQPhWB37clljw3gx8lackUpURffYfR5CgCYCgVO4rFMLpnaPP4tSnDm_Zq20VESGo6sInCXwT82hQSVL3swPtPmdJy2pOrsPh-Zurc9Ky64JxAoDwR7UpCVcX0ThLStFoU8PKf5HR4HWpTadl4sb3XR0fVrRkeipSxQxmxBtuzzyy7p1JyJ9A1BlNvqAOSadZSU0_s7DDLgK6-6PYKLw6feiTM2CwIgT',
+      'Lunch': 'https://lh3.googleusercontent.com/aida-public/AB6AXuDwukDMt5cIZ79e5Ztal9eAtocmmME-J3qYrx6M9Gl6D-pOk_jAOiTNg6rf5VzcWfE-DRrssxUnNpJhMJ9lSpkSzin3V5Zq9FSZjNaO7dI6lpY4a-Ilq3WORRctyTX8DAXZkTxu9eQHe34q5M-eZ6SXZ1fsPD_jOTHqOAQXYZqf2I1GuZrc24LlkNudmNy7-b3QjPZ4cxhD8mDkuKCd76DuMEM8rZuAJNWWTa9d6yRfaOxvQXiBs3uhjN0SkBoUpVeZ2H5CifjLsKcN',
+      'Dinner': 'https://lh3.googleusercontent.com/aida-public/AB6AXuDrSXNUPhakc0mEHQ8dDVXObjOs0Tj1kYFp4V32XAE70RoH5srRA6XwCXq52PyJ1FjCT1A9tcnDZn95f5BvhyTX5C5zwnOZdCirvxIMmbIstg41zoRs286QY4Xx_fCLyDyoFjCkeCIgpHaBxKKxuLie_nOzv_fv1n--zwxCxDnxfAVyJ8hkpBNLRmtdz7lvD8JdtCjHSbUO99Bd4EU2_3yH12zUFtoImVGCcBwUwS2eUdEzrW8Ev14UNWpzjXavni_xLzsvzVYhX9x5',
+    };
+    return defaultImages[mealType] || defaultImages['Lunch'];
   };
 
   // Get meals for the selected day, fallback to Mon if day not found
   const getMealsForDay = (day: string) => {
-    return mealsData[day as keyof typeof mealsData] || mealsData['Mon'];
+    return mealsData[day] || mealsData['Mon'] || [];
   };
 
   const handleBack = () => {
@@ -110,11 +220,28 @@ export default function WeeklyPlan() {
           <TouchableOpacity style={styles.backButton} onPress={handleBack}>
             <Text style={styles.backIcon}>←</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Low-Carb Weekly Plan</Text>
+          <Text style={styles.headerTitle} numberOfLines={1}>{planTitle}</Text>
           <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
             <Text style={styles.shareText}>Share</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Loading/Generating State */}
+        {(loading || generating) && (
+          <View style={styles.loadingBanner}>
+            <ActivityIndicator size="small" color={Colors.primary} />
+            <Text style={styles.loadingBannerText}>
+              {generating ? 'Generating your meal plan...' : 'Loading...'}
+            </Text>
+          </View>
+        )}
+
+        {/* Error Banner */}
+        {error && (
+          <View style={styles.errorBanner}>
+            <Text style={styles.errorBannerText}>{error}</Text>
+          </View>
+        )}
 
         {/* Tab Navigation */}
         <View style={styles.tabContainer}>
@@ -447,5 +574,34 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '700',
+  },
+
+  // Loading and error banners
+  loadingBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.sm,
+    backgroundColor: Colors.primary + '20',
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+  },
+
+  loadingBannerText: {
+    color: Colors.primary,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+
+  errorBanner: {
+    backgroundColor: Colors.warning + '20',
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+  },
+
+  errorBannerText: {
+    color: Colors.warning,
+    fontSize: 14,
+    textAlign: 'center',
   },
 });

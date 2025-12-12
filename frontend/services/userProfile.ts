@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface UserProfile {
   // Basic user info
+  uid?: string;  // Firebase user ID (optional for local profiles)
   name: string;
   email: string;
   avatar?: string;
